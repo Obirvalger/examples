@@ -1,0 +1,31 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<title>Evens.hs</title>
+</head>
+<head>
+<link type='text/css' rel='stylesheet' href='liquid.css' />
+</head>
+
+<body>
+<hr>
+Put mouse over identifiers to see inferred types
+<pre><span class=hs-linenum> 1: </span><span class='hs-keyword'>module</span> <span class='hs-conid'>Evens</span> <span class='hs-keyword'>where</span>
+<span class=hs-linenum> 2: </span>
+<span class=hs-linenum> 3: </span><span class='hs-keyword'>{-@</span> <span class='hs-keyword'>type</span> <span class='hs-conid'>Even</span> <span class='hs-keyglyph'>=</span> <span class='hs-layout'>{</span><span class='hs-varid'>v</span><span class='hs-conop'>:</span><span class='hs-conid'>Int</span> <span class='hs-keyglyph'>|</span> <span class='hs-varid'>v</span> <span class='hs-varid'>mod</span> <span class='hs-num'>2</span> <span class='hs-keyglyph'>=</span> <span class='hs-num'>0</span><span class='hs-layout'>}</span> <span class='hs-keyword'>@-}</span>
+<span class=hs-linenum> 4: </span>
+<span class=hs-linenum> 5: </span><span class='hs-keyword'>{-@</span> <span class='hs-varid'>weAreEven</span> <span class='hs-keyglyph'>::</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>Even</span><span class='hs-keyglyph'>]</span> <span class='hs-keyword'>@-}</span>
+<span class=hs-linenum> 6: </span><span class='hs-definition'>weAreEven</span>     <span class='hs-keyglyph'>=</span> <span class='hs-keyglyph'>[</span><span class='hs-layout'>(</span><span class='hs-num'>0</span><span class='hs-comment'>-</span><span class='hs-num'>10</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-layout'>(</span><span class='hs-num'>0</span><span class='hs-comment'>-</span><span class='hs-num'>4</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-num'>0</span><span class='hs-layout'>,</span> <span class='hs-num'>2</span><span class='hs-layout'>,</span> <span class='hs-num'>666</span><span class='hs-keyglyph'>]</span>
+<span class=hs-linenum> 7: </span>
+<span class=hs-linenum> 8: </span><span class='hs-keyword'>{-@</span> <span class='hs-varid'>notEven</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Even</span> <span class='hs-keyword'>@-}</span>
+<span class=hs-linenum> 9: </span><span class='hs-definition'>notEven</span> <span class='hs-keyglyph'>=</span> <span class='hs-num'>7</span>
+<span class=hs-linenum>10: </span>
+<span class=hs-linenum>11: </span><span class='hs-keyword'>{-@</span> <span class='hs-varid'>isEven</span> <span class='hs-keyglyph'>::</span> <span class='hs-varid'>n</span><span class='hs-conop'>:</span><span class='hs-conid'>Nat</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyword'>{v:</span><span class='hs-conid'>Bool</span> <span class='hs-keyword'>| ((Prop v) &lt;=&gt; (n mod 2 = 0))}</span> <span class='hs-keyword'>@-}</span>   
+<span class=hs-linenum>12: </span><span class='hs-definition'>isEven</span>   <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Int</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span> 
+<span class=hs-linenum>13: </span><span class='hs-definition'>isEven</span> <span class='hs-num'>0</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
+<span class=hs-linenum>14: </span><span class='hs-definition'>isEven</span> <span class='hs-num'>1</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
+<span class=hs-linenum>15: </span><span class='hs-definition'>isEven</span> <span class='hs-varid'>n</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>not</span> <span class='hs-layout'>(</span><span class='hs-varid'>isEven</span> <span class='hs-layout'>(</span><span class='hs-varid'>n</span><span class='hs-comment'>-</span><span class='hs-num'>1</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>
+<span class=hs-linenum>16: </span>
+</pre>
+</body>
+</html>
