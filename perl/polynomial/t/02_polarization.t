@@ -1,27 +1,24 @@
-use Polynomial;
-use Test::More 'no_plan';
+use strict;
+use warnings;
+use Polynomial qw(generate);
+use Test::More tests => 3;
+use Data::Printer;
 
 my $k = 5;
-my @funcs = (
-    "g*x^4 + h*x^3 + g*x^2 + h*x + g",
-    "h*x^4 + 2*g*x^3 + h*x^2 + 2*g*x + h",
-    "(g + h)*x^4 + (2*g + h)*x^3 + (g + h)*x^2 + (2*g + h)*x + (g + h)",
-    "(g + 2*h)*x^4 + (4*g + h)*x^3 + (g + 2*h)*x^2 + (4*g + h)*x + (g + 2*h)",
-    "(g + 3*h)*x^4 + (g + h)*x^3 + (g + 3*h)*x^2 + (g + h)*x + (g + 3*h)",
-    "(g + 4*h)*x^4 + (3*g + h)*x^3 + (g + 4*h)*x^2 + (3*g + h)*x + (g + 4*h)",
-);
+my  @funcs = generate("1.g;1.h","1.h;2.g", $k);
 
-is(Polynomial->new(k => 5, poly => $funcs[0])->polarize(1),
+is($funcs[0]->polarize(1),
     'g*(x+1)^4 + (g + h)*(x+1)^3 + (2*g + 2*h)*(x+1)^2 + (4*g + 4*h)*(x+1) + (3*g + 3*h)',
-    'k=5 f=2 p=2',
+    'k=$k f=2 p=2',
 );
     
-is(Polynomial->new(k => 5, poly => $funcs[1])->polarize(2),
+is($funcs[1]->polarize(2),
     'h*(x+2)^4 + (2*g + 2*h)*(x+2)^3 + 3*g*(x+2)^2 + (g + 4*h)*(x+2) + h',
-    'k=5 f=2 p=2',
+    'k=$k f=2 p=2',
 );
 
-is(Polynomial->new(k => 5, poly => $funcs[4])->polarize(3),
+is($funcs[4]->polarize(3),
     '(g + 3*h)*(x+3)^4 + 4*g*(x+3)^3 + (g + h)*(x+3)^2 + (4*g + h)*(x+3) + (g + 3*h)',
-    'k=5 f=2 p=2',
+    'k=$k f=2 p=2',
 );
+

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 use feature "say";
-use Polynomial 'generate';
+use Polynomial qw(add_mul generate);
 use Data::Printer;
 use Math::Prime::Util qw(binomial znprimroot is_primitive_root);
 use Getopt::Long;
@@ -18,9 +18,10 @@ GetOptions (
 );
 
 my @funcs = generate("1.g;1.h","1.h;$c.g", $k);
+say add_mul($funcs[0], $funcs[1], 2);
 #for my $f (@funcs) { say $f };
-say $funcs[0];
-say $funcs[0]->polarize(1);
+#say $funcs[0];
+#say $funcs[0]->polarize(1);
 
 
 __END__
