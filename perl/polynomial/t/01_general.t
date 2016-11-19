@@ -1,7 +1,7 @@
-use Test::More tests => 26;
+use Test::More tests => 34;
 
 use_ok('Polynomial');
-can_ok('Polynomial', qw(new polarize));
+can_ok('Polynomial', qw(new polarize mul clone len));
 
 for my $k (5, 7, 11, 97) { # prime numbers 5, 7 are used, 11 first > 10, 97 big
     my $g = Polynomial->new(k => $k, gen => '1.g;1.h');
@@ -15,8 +15,14 @@ for my $k (5, 7, 11, 97) { # prime numbers 5, 7 are used, 11 first > 10, 97 big
     $h += $h;
     isnt($h, $f, "k = $k clone should work");
 
-    is($f->mul(1), $f, "k = $k multiplication by 1 should be identity");
+    $h = $g->clone;
+    is($f->len, $k, "k = $k len should work for complex functions");
+    
+    $h->vector->[1]->{h} = 0;
+    $h->vector->[2]->{g} = 0;
+    is($h->len, $k-2, "k = $k len should work for non complex functions");
 
+    is($f->mul(1), $f, "k = $k multiplication by 1 should be identity");
     is($g->mul($k+$k+1), $g, "k = $k multiplication should be modulo k");
 
     $h = $g->clone;

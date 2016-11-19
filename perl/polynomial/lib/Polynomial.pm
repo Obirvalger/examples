@@ -78,6 +78,17 @@ sub _overload_add {
     return $tmp;
 }
 
+sub len {
+    my $self = shift;
+    my $sum = 0;
+
+    for my $h (@{$self->vector}) {
+        $sum += (grep {$h->{$_} > 0} keys %$h) > 0;
+    }
+
+    return $sum;
+}
+
 sub clone {
     my $self = shift;
     my $res = dclone $self;
