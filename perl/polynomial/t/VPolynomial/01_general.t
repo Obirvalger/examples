@@ -1,14 +1,18 @@
-use Test::More tests => 34;
+use Test::More 'no_plan';
 
-use_ok('Polynomial');
-can_ok('Polynomial', qw(new polarize mul clone len));
+use_ok('VPolynomial', qw());
+can_ok('VPolynomial', qw(new polarize mul clone len));
+
+is(VPolynomial->new(k => 5, polynomial => [3,0,0,0,2]), "2*x^4 + 3",
+    "print should work");
+__END__
 
 for my $k (5, 7, 11, 97) { # prime numbers 5, 7 are used, 11 first > 10, 97 big
-    my $g = Polynomial->new(k => $k, gen => '1.g;1.h');
-    my $f = Polynomial->new(k => $k, gen => '1.h;-1.g');
+    my $g = SPolynomial->new(k => $k, gen => '1.g;1.h');
+    my $f = SPolynomial->new(k => $k, gen => '1.h;-1.g');
     my $h; # use as tmp polynomial later
 
-    is($f, Polynomial->new(k => $k, gen => "1.h;@{[$k-1]}.g"), 
+    is($f, SPolynomial->new(k => $k, gen => "1.h;@{[$k-1]}.g"), 
         "k = $k gen should work modulo k");
 
     $h = $f->clone;

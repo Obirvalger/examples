@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 use feature "say";
-use Polynomial qw(add_mul generate);
+use VPolynomial;
 use Data::Printer;
 use Math::Prime::Util qw(binomial znprimroot is_primitive_root);
 use Getopt::Long;
@@ -19,7 +19,10 @@ GetOptions (
 
 $c //= znprimroot($k);
 
-say $c;
+say VPolynomial->new(k => 5, str => '2x^4+(x+1)^4');
+
+
+__END__
 
 my @funcs = generate("1.g;1.h","1.h;$c.g", $k);
 

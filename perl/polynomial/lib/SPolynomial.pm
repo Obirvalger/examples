@@ -1,4 +1,4 @@
-package Polynomial;
+package SPolynomial;
 use Moose;
 use feature 'say';
 use Data::Printer;
@@ -24,7 +24,7 @@ has 'd' => (
     default => 0,
 );
 
-has 'poly' => (
+has 'str' => (
     is      => 'ro',
     isa     => 'Str',
 #    required => 1,
@@ -41,12 +41,12 @@ has 'funcs' => (
     default => sub {['g', 'h']},
 );
 
-has 'vector' => (
+has 'polynomial' => (
     is       => 'rw',
 #    init_arg => undef,
     isa      => 'ArrayRef[HashRef[Int]]',
     lazy     => 1,
-    builder  => '_build_vector',
+    builder  => '_build_polynomial',
 ); 
 
 
@@ -58,12 +58,12 @@ sub _overload_add_eq {
 #    say '+=';
     my ($self, $other) = @_;
     croak "k must be equal in summands" unless $self->k == $other->k;
-    my $svector = $self->vector;
-    my $ovector = $other->vector;
-    while (my ($i, $coeff)  = each @$ovector) {
+    my $spolynomial = $self->polynomial;
+    my $opolynomial = $other->polynomial;
+    while (my ($i, $coeff)  = each @$opolynomial) {
         for my $f (keys %$coeff) {
-            $svector->[$i]{$f} += $coeff->{$f};
-            $svector->[$i]{$f} %= $self->k;
+            $spolynomial->[$i]{$f} += $coeff->{$f};
+            $spolynomial->[$i]{$f} %= $self->k;
         }
     }
     return $self;
@@ -82,7 +82,7 @@ sub len {
     my $self = shift;
     my $sum = 0;
 
-    for my $h (@{$self->vector}) {
+    for my $h (@{$self->polynomial}) {
         $sum += (grep {$h->{$_} > 0} keys %$h) > 0;
     }
 
@@ -98,7 +98,7 @@ sub clone {
 sub mul {
     my ($self, $c) = @_;
     my $tmp = dclone $self;
-    for my $coeff (@{$tmp->vector}) {
+    for my $coeff (@{$tmp->polynomial}) {
         for my $f (keys %$coeff) {
 #            p $coeff;
 #            say "$f $$coeff{$f}";
@@ -114,7 +114,7 @@ sub polarize {
     my ($self, $d) = @_;
     my $k = $self->k;
     $d %= $k;
-    my $a = $self->vector;
+    my $a = $self->polynomial;
     my $res;
     for (my $pow = 0; $pow < $k; ++$pow) {
         my $h = $a->[$pow];
@@ -129,14 +129,14 @@ sub polarize {
         }
     }
 
-    return Polynomial->new(vector => $res, d => $d, k => $k);
+    return SPolynomial->new(polynomial => $res, d => $d, k => $k);
 }
 
 sub _print {
     my $self = shift;
     my $d = $self->d;
     my @res;
-    while (my ($i,$s) = each @{$self->vector}) {
+    while (my ($i,$s) = each @{$self->polynomial}) {
         my @keys = sort grep {$s->{$_} > 0} keys %{$s};
 
         if (@keys) {
@@ -175,25 +175,25 @@ sub _print {
 #    return $self;
 }
 
-sub _build_vector {
+sub _build_polynomial {
     my $self = shift;
-    my $vector;
+    my $polynomial;
 
     if ($self->gen) {
         my @gen = split /;/, $self->gen;
         my $n = @gen;
         for my $x (@gen) {
             my ($c, $f) = split(/\./, $x);
-            unshift @$vector, {$f => $c % $self->k};
+            unshift @$polynomial, {$f => $c % $self->k};
         }
 
         for (my $i = $n; $i < $self->k; ++$i) {
-#            p $vector;
-            unshift @$vector, {%{$vector->[$n-1]}};
+#            p $polynomial;
+            unshift @$polynomial, {%{$polynomial->[$n-1]}};
         }
 
     } else {
-        my $s = $self->poly;
+        my $s = $self->str;
         
         # powers
         $s =~ s/([a-z]+)$/$1*x^0/;
@@ -218,18 +218,18 @@ sub _build_vector {
             my ($coeff, $pow) = split(/\^/, $s);
             for my $cf (split(/\+/, $coeff)) {
                 my ($c, $f) = split(/\./, $cf);
-                $vector->[$pow]{$f} = $c;
+                $polynomial->[$pow]{$f} = $c;
             }
         }
     }
 
-    for my $coeff (@$vector) {
+    for my $coeff (@$polynomial) {
         for my $f (@{$self->funcs}) {
             $coeff->{$f} //= 0;
         }
     }
 
-    return $vector;
+    return $polynomial;
 }
 
 __PACKAGE__->meta->make_immutable;
@@ -245,8 +245,8 @@ sub add_mul {
 sub generate {
     my ($g, $h, $k) = @_;
     my @res;
-    my $f0 = Polynomial->new(k => $k, gen => $g);
-    my $f1 = Polynomial->new(k => $k, gen => $h);
+    my $f0 = SPolynomial->new(k => $k, gen => $g);
+    my $f1 = SPolynomial->new(k => $k, gen => $h);
     
     push @res, $f0, $f1;
 

@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Polynomial qw(generate);
+use SPolynomial qw(generate);
 use Test::More tests => 3;
 use Data::Printer;
 
