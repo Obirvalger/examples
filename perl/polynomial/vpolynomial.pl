@@ -3,10 +3,11 @@
 use strict;
 use warnings;
 use feature "say";
-use VPolynomial;
+use VPolynomial qw(modulo_sum);
 use Data::Printer;
 use Math::Prime::Util qw(binomial znprimroot is_primitive_root);
 use Getopt::Long;
+use Data::Printer;
 
 our $k = 5;
 our $c;
@@ -19,7 +20,10 @@ GetOptions (
 
 $c //= znprimroot($k);
 
-say VPolynomial->new(k => 5, str => '2x^4+(x+1)^4');
+#say modulo_sum();
+say VPolynomial->new(k => 5, str => '2x^2 + x^3');
+say VPolynomial->new(k => 5, str => '0');
+say VPolynomial->new(k => 5, d => 1, str => '2x^4 + (x+1)^4');
 
 
 __END__
