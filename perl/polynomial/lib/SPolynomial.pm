@@ -8,7 +8,7 @@ use Storable 'dclone';
 use Carp;
 
 Moose::Exporter->setup_import_methods(
-    as_is => [qw(add_mul generate)],
+    as_is => [qw(add_mul generate_all my_generate)],
 );
 
 has 'k' => (
@@ -243,6 +243,61 @@ sub add_mul {
 }
 
 sub generate {
+    croak "Need exactly 3 arguments" unless @_ == 3;
+    my ($s, $t, $k) = @_;
+    my $polynomial;
+    my @gen = split /;/, $s;
+    my @funcs;
+    if ($t == 2) {
+        my $n = @gen;
+        for my $x (@gen) {
+            my ($c, $f) = split(/\./, $x);
+            push @funcs, $f;
+            unshift @$polynomial, {$f => $c % $k};
+        }
+
+        for (my $i = $n; $i < $k; ++$i) {
+#            p $polynomial;
+            unshift @$polynomial, {%{$polynomial->[$n-1]}};
+        }
+    } elsif ($t == 1) {
+        my ($c1, $f1) = split(/\./, $gen[0]);
+        my ($c2, $f2) = split(/\./, $gen[1]);
+        push @funcs, $f1, $f2;
+        unshift @$polynomial, {$f1 => $c1 % $k};
+
+        for my $i (1..$k-1) {
+            unshift @$polynomial, {$f2 => $c2 % $k};
+        }
+    }
+
+    for my $coeff (@$polynomial) {
+        for my $f (@funcs) {
+            $coeff->{$f} //= 0;
+        }
+    }
+
+    return SPolynomial->new(k => $k, polynomial => $polynomial);
+}
+
+sub my_generate {
+    my ($g, $h, $k) = @_;
+    my @res;
+    my $f0 = generate($g,1,$k);
+    my $f1 = generate($h,1,$k);
+    
+    push @res, $f0, $f1;
+#    say $f0;
+#    say $f1;
+    for my $c (1..$k-1) {
+#        say add_mul($f0,$f1,$c);
+        push @res, add_mul($f0,$f1,$c);
+    }
+
+    @res;
+}
+
+sub generate_all {
     my ($g, $h, $k) = @_;
     my @res;
     my $f0 = SPolynomial->new(k => $k, gen => $g);

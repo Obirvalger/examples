@@ -8,7 +8,7 @@ use Storable 'dclone';
 use Carp;
 
 Moose::Exporter->setup_import_methods(
-    as_is => [qw(modulo_sum)],
+    as_is => [qw(modulo_sum test_group_len is_group_len)],
 );
 
 has 'k' => (
@@ -19,13 +19,14 @@ has 'k' => (
 );
 
 has 'd' => (
-    is      => 'rw',
+    is      => 'ro',
     isa     => 'Int',
     default => 0,
 );
 
 has 'str' => (
-    is      => 'ro',
+    is      => 'bare',
+    reader  => '_str',
     isa     => 'Str',
 #    required => 1,
 );
@@ -102,18 +103,22 @@ sub polarize {
     my ($self, $d) = @_;
     my $k = $self->k;
     $d %= $k;
-    my $a = $self->polynomial;
-    my $res;
-    for (my $pow = 0; $pow < $k; ++$pow) {
-        my $c = 0;
-        for (my $i = $pow; $i < $k; ++$i) {
-            $c += $a->[$i] * binomial($i, $pow) * powmod(-$d,$i-$pow,$k);
-        }
-        $c %= $k;
-        $res->[$pow] = $c;
+    my $res = polar($k, $self->polynomial, $d - $self->d);
+
+    return VPolynomial->new(polynomial => $res, d => $d, k => $k);
+}
+
+sub csv {
+    my $self = shift;
+    my $d = $self->d;
+    my @res;
+    return 0 if ($self->k == grep {$_ == 0} @{$self->polynomial});
+    while (my ($pow,$c) = each @{$self->polynomial}) {
+        my $coeff = show_var(d => $d, c => $c, pow => $pow);
+        unshift @res, $coeff; 
     }
 
-    return SPolynomial->new(polynomial => $res, d => $d, k => $k);
+    join(';', @res);
 }
 
 sub _print {
@@ -121,27 +126,9 @@ sub _print {
     my $d = $self->d;
     my @res;
     return 0 if ($self->k == grep {$_ == 0} @{$self->polynomial});
-    while (my ($i,$c) = each @{$self->polynomial}) {
-        if ($c > 0) {
-            my $coeff = $c == 1 ? '' : $i > 0 ? "$c*" : $c;
-            $coeff = 1 if $c == 1 && $i == 0;
-
-            if ($i > 1) {
-                if ($d > 0) {
-                    $coeff .= "(x+$d)^$i";
-                } else {
-                    $coeff .= "x^$i";
-                }
-            } elsif ($i == 1) {
-                if ($d > 0) {
-                    $coeff .= "(x+$d)";
-                } else {
-                    $coeff .= "x";
-                }
-            }
-
-            unshift @res, $coeff; 
-        }
+    while (my ($pow,$c) = each @{$self->polynomial}) {
+        my $coeff = show_var(d => $d, c => $c, pow => $pow);
+        unshift @res, $coeff if $coeff; 
     }
 
     join(' + ', @res);
@@ -149,22 +136,33 @@ sub _print {
 
 sub _build_polynomial {
     my $self = shift;
-    my $s = $self->str =~ tr/ //dr;
+    my $s = $self->_str; 
     my $k = $self->k;
     my $d = $self->d;
     my $polynomial;
     my $vectors;
 
-    my $number = qr/(?:-|\+)?\s*\d+/;
-    my $var = qr/x/;
-    my $varst = qr/\($var\s*(?<d>$number)\)|\((?<d>$number)\s*\+\s*$var\)|$var/;
+    my $number = qr/(?:-|\+)?\d+/;
+    my $var = qr/(?<x>x)/;
+    my $varst = qr{
+            \($var(?<d>$number)\)
+        |
+            \((?<d>$number)\+$var\)
+        |
+            $var
+    }x;
     my $expst = qr/$varst\^(?<pow>$number)/;
     my $summand = qr/$expst|$varst/;
     my $summandst = qr{
-        (?:(?<c>$number)\*?)? $summand |
-        \+ $summand                    |
-        (?<l> (?<c>$number) )
+            (?: (?<c>$number) \*? )? $summand 
+        |
+            (?<c>$number)
     }x;
+
+    $s =~ tr/ //d;
+    $s =~ s/(\+|-)(?=(?:\(|$var))/${1}1/g;
+
+    croak "Bad string" unless $s =~ /^($summandst)+$/;
 
     while ($s =~ /$summandst/g) {
         my %h = %+;
@@ -176,10 +174,8 @@ sub _build_polynomial {
         $h{c} =~ s/\s//g;
         $h{c} += 0;
         $h{pow} //= 1;
-        if (defined $h{l}) {
-            $h{pow} = 0;
-            delete $h{l};
-        }
+        $h{pow} = 0 unless defined $h{x};
+        delete $h{x};
 
 #        p %h;
 
@@ -196,13 +192,88 @@ sub _build_polynomial {
     }
 
     $polynomial = modulo_sum($k, @$vectors);
-#    p $polynomial;
-#    $vectors->[0];
-#    return $polynomial;
 }
 
 __PACKAGE__->meta->make_immutable;
 no Moose;
+
+sub show_var {
+    my %h = @_;
+    my $res = "";
+    my ($c, $d, $i) = @h{qw(c d pow)};
+    $c //= 1;
+    $d //= 0;
+    if ($c > 0) {
+        my $coeff = $c == 1 ? '' : $i > 0 ? "$c*" : $c;
+        $coeff = 1 if $c == 1 && $i == 0;
+
+        if ($i > 1) {
+            if ($d > 0) {
+                $coeff .= "(x+$d)^$i";
+            } else {
+                $coeff .= "x^$i";
+            }
+        } elsif ($i == 1) {
+            if ($d > 0) {
+                $coeff .= "(x+$d)";
+            } else {
+                $coeff .= "x";
+            }
+        }
+
+        $res = $coeff; 
+    }
+
+    return $res;
+}
+
+sub test_group_len {
+    group_len(1, @_);
+}
+
+sub is_group_len {
+    group_len(0, @_);
+}
+
+sub group_len {
+    my $v = shift;
+    my $k = $_[0]->k;
+    croak "k must be equal in summands" unless @_ == grep {$_->k == $k} @_;
+#    p @vectors;
+    for my $d (0..$k-1) {
+        my @vectors = map {$_->polarize($d)->polynomial} @_;
+        for my $pow (0..$k-1) {
+            my $s = 0;
+            while (my ($i, $v) = each @vectors) {
+                $s = 1 if $v->[$pow];
+            }
+            unless ($s) {
+                warn "Failed: d = $d pow = $pow\n" if $v;
+                return 0 unless $s;
+            }
+        }
+    }
+    
+    warn "Ok\n" if $v;
+    return 1;
+}
+
+sub polar {
+    my ($k, $vector, $d) = @_;
+    $d %= $k;
+    my $res;
+    for (my $pow = 0; $pow < $k; ++$pow) {
+        my $c = 0;
+        for (my $i = $pow; $i < $k; ++$i) {
+            $c += $vector->[$i] * binomial($i, $pow) * powmod(-$d,$i-$pow,$k);
+        }
+        $c %= $k;
+        $res->[$pow] = $c;
+    }
+#    p $res;
+    
+    $res;
+}
 
 sub modulo_sum {
     my $k = shift;
@@ -233,22 +304,6 @@ sub make_poly {
     \@poly;
 }
 
-sub polar {
-    my ($k, $a, $d) = @_;
-    $d %= $k;
-    my $res;
-    for (my $pow = 0; $pow < $k; ++$pow) {
-        my $c = 0;
-        for (my $i = $pow; $i < $k; ++$i) {
-            $c += $a->[$i] * binomial($i, $pow) * powmod(-$d,$i-$pow,$k);
-        }
-        $c %= $k;
-        $res->[$pow] = $c;
-    }
-#    p $res;
-    
-    $res;
-}
 
 __END__
 

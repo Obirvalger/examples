@@ -1,6 +1,6 @@
 use Test::More tests => 34;
 
-use_ok('SPolynomial', qw(generate add_mul));
+use_ok('SPolynomial', qw(generate_all add_mul));
 can_ok('SPolynomial', qw(new polarize mul clone len));
 
 for my $k (5, 7, 11, 97) { # prime numbers 5, 7 are used, 11 first > 10, 97 big

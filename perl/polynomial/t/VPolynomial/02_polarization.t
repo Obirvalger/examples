@@ -1,24 +1,31 @@
 use strict;
 use warnings;
-use SPolynomial qw(generate);
-use Test::More tests => 3;
+use VPolynomial;
+use Test::More 'no_plan';
 use Data::Printer;
+use Math::Prime::Util qw(binomial znprimroot is_primitive_root powmod);
 
 my $k = 5;
-my  @funcs = generate("1.g;1.h","1.h;2.g", $k);
 
-is($funcs[0]->polarize(1),
-    'g*(x+1)^4 + (g + h)*(x+1)^3 + (2*g + 2*h)*(x+1)^2 + (4*g + 4*h)*(x+1) + (3*g + 3*h)',
-    'k=$k f=2 p=2',
-);
-    
-is($funcs[1]->polarize(2),
-    'h*(x+2)^4 + (2*g + 2*h)*(x+2)^3 + 3*g*(x+2)^2 + (g + 4*h)*(x+2) + h',
-    'k=$k f=2 p=2',
-);
+my $f = VPolynomial->new(k => $k, d => 1, str => '(x+1)^4');
 
-is($funcs[4]->polarize(3),
-    '(g + 3*h)*(x+3)^4 + 4*g*(x+3)^3 + (g + h)*(x+3)^2 + (4*g + h)*(x+3) + (g + 3*h)',
-    'k=$k f=2 p=2',
-);
+is($f->polarize(0), "x^4 + 4*x^3 + x^2 + 4*x + 1");
+is($f->polarize(1), "(x+1)^4");
+is($f->polarize(2), "(x+2)^4 + (x+2)^3 + (x+2)^2 + (x+2) + 1");
+is($f->polarize(3), "(x+3)^4 + 2*(x+3)^3 + 4*(x+3)^2 + 3*(x+3) + 1");
+is($f->polarize(4), "(x+4)^4 + 3*(x+4)^3 + 4*(x+4)^2 + 2*(x+4) + 1");
+
+
+=begin  BlockComment  # BlockCommentNo_1
+for my $k (3,5,7,11) {
+    for my $d (0..$k-1) {
+        my @summands;
+        for my $i (reverse (0..$k-1)) {
+            push @summands, -binomial($k-1, $i) * powmod(-$d,$i,$k) % $k;
+        }
+        print join(' + ', @summands), "\n";
+    }
+}
+=end    BlockComment  # BlockCommentNo_1
+=cut
 

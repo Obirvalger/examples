@@ -3,27 +3,49 @@
 use strict;
 use warnings;
 use feature "say";
-use VPolynomial qw(modulo_sum);
+use VPolynomial qw(modulo_sum test_group_len is_group_len);
 use Data::Printer;
 use Math::Prime::Util qw(binomial znprimroot is_primitive_root);
 use Getopt::Long;
 use Data::Printer;
 
-our $k = 5;
-our $c;
+my $k = 5;
+my $c;
+my $v = 0;
+my $t = 0;
 
 Getopt::Long::Configure ("bundling");
 GetOptions (
     'k=i' => \$k,
-    'c=i' => \$c
+    'c=i' => \$c,
+    'v'   => \$v,
+    't'   => \$t,
 );
 
-$c //= znprimroot($k);
+$c //= -1*znprimroot($k) % $k;
+my $k_1 = $k-1;
+my $f = VPolynomial->new(k => $k, str => "${c}x^$k_1 + (x+1)^$k_1");
+my $g = VPolynomial->new(k => $k, str => "${c}(x+1)^$k_1 + (x+2)^$k_1");
 
-#say modulo_sum();
-say VPolynomial->new(k => 5, str => '2x^2 + x^3');
-say VPolynomial->new(k => 5, str => '0');
-say VPolynomial->new(k => 5, d => 1, str => '2x^4 + (x+1)^4');
+if (0) {
+    for my $d (0..$k-1) {say $f->polarize($d)};
+    say '';
+    for my $d (0..$k-1) {say $g->polarize($d)};
+    say '';
+}
+
+if ($t or $v) {
+    for my $d (0..$k-1) {
+        say $f->polarize($d)->csv if $t;
+        say $g->polarize($d)->csv if $t;
+        say '' if $t;
+
+        warn $f->polarize($d), "\n" if $v;
+        warn $g->polarize($d), "\n\n" if $v;
+    };
+}
+
+test_group_len($f, $g);
 
 
 __END__

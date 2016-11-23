@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 use feature "say";
-use SPolynomial qw(add_mul generate);
+use SPolynomial qw(add_mul generate_all my_generate);
 use Data::Printer;
 use Math::Prime::Util qw(binomial znprimroot is_primitive_root);
 use Getopt::Long;
@@ -19,11 +19,12 @@ GetOptions (
 
 $c //= znprimroot($k);
 
-say $c;
+#say $c;
 
 #say Polynomial->new(k => $k, 
-my @funcs = generate("1.g;1.h","1.h;$c.g", $k);
-#my @funcs = Polynomial::generate("1.g;1.h","1.h;$c.g", $k);
+#my @funcs = generate_all("1.g;1.h","1.h;$c.g", $k);
+my @funcs = my_generate("1.g;1.h","1.h;$c.g", $k);
+#my @funcs = Polynomial::generate_all("1.g;1.h","1.h;$c.g", $k);
 
 is_all_complex(@funcs);
 
