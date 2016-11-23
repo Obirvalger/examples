@@ -77,25 +77,14 @@ sub clone {
 }
 
 sub mul {
-
-=begin  BlockComment  # BlockCommentNo_1
-
     my ($self, $c) = @_;
     my $tmp = dclone $self;
+    my $k = $tmp->k;
     for my $coeff (@{$tmp->polynomial}) {
-        for my $f (keys %$coeff) {
-#            p $coeff;
-#            say "$f $$coeff{$f}";
-            $$coeff{$f} *= $c;
-            $$coeff{$f} %= $tmp->k;
-        }
+            ($coeff *= $c) %= $k;
     }
     
     return $tmp;
-
-=end    BlockComment  # BlockCommentNo_1
-
-=cut
 
 }
 
@@ -239,17 +228,23 @@ sub group_len {
     my $v = shift;
     my $k = $_[0]->k;
     croak "k must be equal in summands" unless @_ == grep {$_->k == $k} @_;
+    if (@_ == 2) {
+        for my $c (1..$k-1) {
+            my $h = $_[0] + $_[1]->mul($c);
+            push @_, $h;
+        }
+    }
 #    p @vectors;
     for my $d (0..$k-1) {
         my @vectors = map {$_->polarize($d)->polynomial} @_;
         for my $pow (0..$k-1) {
-            my $s = 0;
+            my $s = 1;
             while (my ($i, $v) = each @vectors) {
-                $s = 1 if $v->[$pow];
+                $s -= 1 unless $v->[$pow];
             }
-            unless ($s) {
+            if ($s < 0) {
                 warn "Failed: d = $d pow = $pow\n" if $v;
-                return 0 unless $s;
+                return 0;
             }
         }
     }

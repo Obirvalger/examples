@@ -36,10 +36,17 @@ if (0) {
 
 if ($t or $v) {
     for my $d (0..$k-1) {
-        say $f->polarize($d)->csv if $t;
-        say $g->polarize($d)->csv if $t;
-        say '' if $t;
+        if ($t) {
+            say $f->polarize($d)->csv;
+            say $g->polarize($d)->csv;
+            for my $c (1..$k-1) {
+                my $h = ($f + $g->mul($c))->polarize($d);
+                say $h->csv;
+            }
+            say '';
+        }
 
+#        say $f->_str;
         warn $f->polarize($d), "\n" if $v;
         warn $g->polarize($d), "\n\n" if $v;
     };

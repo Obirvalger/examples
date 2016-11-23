@@ -26,17 +26,22 @@ $c //= znprimroot($k);
 my @funcs = my_generate("1.g;1.h","1.h;$c.g", $k);
 #my @funcs = Polynomial::generate_all("1.g;1.h","1.h;$c.g", $k);
 
+say $funcs[0];
+say $funcs[1];
+
 is_all_complex(@funcs);
 
 sub is_all_complex {
     my @funcs = @_;
     for my $d (0..$k-1) {
         for my $f (@funcs) {
+#            say $f->polarize($d);
             if ((my $n = $f->polarize($d)->len) < $k) {
                 say "Only $n summands in\n$f"; 
                 return 0;
             }
         }
+#        say '';
     }
     say "Ok";
 }

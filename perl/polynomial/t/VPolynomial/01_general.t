@@ -27,6 +27,9 @@ for my $k (5,11) {
     }
 }
 
+
+=begin  BlockComment  # BlockCommentNo_1
+
 my $k = 67;
 for my $d (0,1,5,10,21,48) {
 #    my $f = '8*x^21 + 6*x^15 + 12*x^3 + 7';
@@ -35,6 +38,11 @@ for my $d (0,1,5,10,21,48) {
     my $s = VPolynomial->new(k => $k, d => $d, str => $f);
     is($s, $f, "big test k = $k d = $d");
 }
+
+=end    BlockComment  # BlockCommentNo_1
+
+=cut
+
 
 for my $k (5,11) {
     for my $d (0..$k-1) {
