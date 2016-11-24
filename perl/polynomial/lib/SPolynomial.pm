@@ -1,26 +1,36 @@
 package SPolynomial;
+
 use Moose;
+use Moose::Util::TypeConstraints;
+use MyTypes;
+
 use feature 'say';
 use Data::Printer;
 use Data::Dumper;
-use Math::Prime::Util qw(binomial znprimroot is_primitive_root powmod);
+use Math::Prime::Util qw(
+    binomial 
+    znprimroot 
+    is_primitive_root 
+    powmod 
+    is_prime
+);
 use Storable 'dclone';
 use Carp;
 
 Moose::Exporter->setup_import_methods(
-    as_is => [qw(add_mul generate_all my_generate)],
+    as_is => [qw(add_mul generate_all my_generate show_polynomial)],
 );
 
 has 'k' => (
-    is      => 'rw',
-    isa     => 'Int',
-    default => 5,
-    #required => 1,
+    is      => 'ro',
+    isa     => 'Prime',
+#    default => 5,
+    required => 1,
 );
 
 has 'd' => (
-    is      => 'rw',
-    isa     => 'Int',
+    is      => 'ro',
+    isa     => 'Uint',
     default => 0,
 );
 
@@ -44,13 +54,28 @@ has 'funcs' => (
 has 'polynomial' => (
     is       => 'rw',
 #    init_arg => undef,
-    isa      => 'ArrayRef[HashRef[Int]]',
+    isa      => 'ArrayRef[HashRef[Uint]]',
     lazy     => 1,
     builder  => '_build_polynomial',
 ); 
 
 
 use overload '""' => \&_print;
+
+sub _print {
+    my $self = shift;
+    show_polynomial(poly => $self, del => ' + ', noblank => 1);
+}
+
+sub to_csv {
+    my $self = shift;
+    show_polynomial(poly => $self, del => ';');
+}
+
+sub to_tex {
+    my $self = shift;
+    show_polynomial(poly => $self, del => ';');
+}
 
 use overload '+=' => \&_overload_add_eq, fallback => 1;
 
@@ -132,48 +157,7 @@ sub polarize {
     return SPolynomial->new(polynomial => $res, d => $d, k => $k);
 }
 
-sub _print {
-    my $self = shift;
-    my $d = $self->d;
-    my @res;
-    while (my ($i,$s) = each @{$self->polynomial}) {
-        my @keys = sort grep {$s->{$_} > 0} keys %{$s};
 
-        if (@keys) {
-            my @coeff;
-            for my $f (@keys) {
-                if ($s->{$f} == 1) {
-                    push @coeff, $f;
-                } else {
-                    push @coeff, "$s->{$f}*$f";
-                }
-            }
-            
-            my $coeff = join(' + ', @coeff);
-            $coeff = "($coeff)" if @coeff > 1;
-
-            if ($i > 1) {
-                if ($d > 0) {
-                    $coeff .= "*(x+$d)^$i";
-                } else {
-                    $coeff .= "*x^$i";
-                }
-            } elsif ($i == 1) {
-                if ($d > 0) {
-                    $coeff .= "*(x+$d)";
-                } else {
-                    $coeff .= "*x";
-                }
-            }
-
-            unshift @res, $coeff; 
-        }
-    }
-
-    join(' + ', @res);
-    #say join(' + ', @res);
-#    return $self;
-}
 
 sub _build_polynomial {
     my $self = shift;
@@ -234,6 +218,69 @@ sub _build_polynomial {
 
 __PACKAGE__->meta->make_immutable;
 no Moose;
+
+sub show_polynomial {
+    my %args = (
+        before  => '',
+        after   => '',
+        noblank => 0,
+        default => '',
+        around  => ['', ''],
+        @_
+    );
+
+    for my $required (qw(poly del)) {
+        croak "You must pass '$required' argument"
+            unless defined $args{$required};
+    }
+
+    my ($k, $d) = ($args{poly}->k, $args{poly}->d);
+    my @polynomial = @{$args{poly}->polynomial};
+    my @res;
+#    p @polynomial;
+
+    while (my ($i,$s) = each @polynomial) {
+        my @keys = sort grep {$s->{$_} > 0} keys %{$s};
+        my $coeff = $args{default};
+        my $blank = not @keys;
+
+        unless ($blank) {
+            $coeff = '';
+            my @coeffs;
+            for my $f (@keys) {
+                if ($s->{$f} == 1) {
+                    push @coeffs, $f;
+                } else {
+                    push @coeffs, "$s->{$f}*$f";
+                }
+            }
+            
+            $coeff = join(' + ', @coeffs);
+            $coeff = "($coeff)" if @coeffs > 1;
+
+            if ($i > 1) {
+                if ($d > 0) {
+                    $coeff .= "*(x+$d)^$i";
+                } else {
+                    $coeff .= "*x^$i";
+                }
+            } elsif ($i == 1) {
+                if ($d > 0) {
+                    $coeff .= "*(x+$d)";
+                } else {
+                    $coeff .= "*x";
+                }
+            }
+        }
+        
+        if (not $blank or not $args{noblank}) {
+          $coeff = $args{around}[0] . $coeff . $args{around}[1] unless $blank;
+          unshift @res, $coeff; 
+        }
+    }
+
+    $args{before} . join($args{del}, @res) . $args{after};
+}
 
 sub add_mul {
     my ($p1, $p2, $c) = @_;

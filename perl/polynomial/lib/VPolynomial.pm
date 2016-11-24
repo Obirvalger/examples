@@ -1,9 +1,19 @@
 package VPolynomial;
+
 use Moose;
+use Moose::Util::TypeConstraints;
+use MyTypes;
+
 use feature 'say';
 use Data::Printer;
 use Data::Dumper;
-use Math::Prime::Util qw(binomial znprimroot is_primitive_root powmod);
+use Math::Prime::Util qw(
+    binomial 
+    znprimroot 
+    is_primitive_root 
+    powmod 
+    is_prime
+);
 use Storable 'dclone';
 use Carp;
 
@@ -12,15 +22,15 @@ Moose::Exporter->setup_import_methods(
 );
 
 has 'k' => (
-    is      => 'rw',
-    isa     => 'Int',
-    default => 5,
-    #required => 1,
+    is      => 'ro',
+    isa     => 'Prime',
+#    default => 5,
+    required => 1,
 );
 
 has 'd' => (
     is      => 'ro',
-    isa     => 'Int',
+    isa     => 'Uint',
     default => 0,
 );
 
@@ -34,7 +44,7 @@ has 'str' => (
 has 'polynomial' => (
     is       => 'rw',
 #    init_arg => undef,
-    isa      => 'ArrayRef[Int]',
+    isa      => 'ArrayRef[Uint]',
     lazy     => 1,
     builder  => '_build_polynomial',
 ); 
