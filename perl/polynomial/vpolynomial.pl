@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 use feature "say";
-use VPolynomial qw(modulo_sum test_group_len is_group_len);
+use VPolynomial qw(modulo_sum test_group_len show_polynomial);
 use Data::Printer;
 use Math::Prime::Util qw(binomial znprimroot is_primitive_root);
 use Getopt::Long;
@@ -26,6 +26,11 @@ $c //= -1*znprimroot($k) % $k;
 my $k_1 = $k-1;
 my $f = VPolynomial->new(k => $k, str => "${c}x^$k_1 + (x+1)^$k_1");
 my $g = VPolynomial->new(k => $k, str => "${c}(x+1)^$k_1 + (x+2)^$k_1");
+
+say VPolynomial->new(k => $k, str => 0);
+#say show_polynomial(poly => $f, del => ';');
+
+__END__
 
 if (0) {
     for my $d (0..$k-1) {say $f->polarize($d)};

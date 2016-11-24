@@ -18,7 +18,7 @@ use Storable 'dclone';
 use Carp;
 
 Moose::Exporter->setup_import_methods(
-    as_is => [qw(modulo_sum test_group_len is_group_len)],
+    as_is => [qw(modulo_sum test_group_len is_group_len show_polynomial)],
 );
 
 has 'k' => (
@@ -51,6 +51,21 @@ has 'polynomial' => (
 
 
 use overload '""' => \&_print;
+
+sub _print {
+    my $self = shift;
+    show_polynomial(poly => $self, del => ' + ', noblank => 1);
+}
+
+sub to_csv {
+    my $self = shift;
+    show_polynomial(poly => $self, del => ';');
+}
+
+sub to_tex {
+    my $self = shift;
+    show_polynomial(poly => $self, del => '+', around => ['$','$']);
+}
 
 use overload '+=' => \&_overload_add_eq, fallback => 1;
 
@@ -120,18 +135,18 @@ sub csv {
     join(';', @res);
 }
 
-sub _print {
-    my $self = shift;
-    my $d = $self->d;
-    my @res;
-    return 0 if ($self->k == grep {$_ == 0} @{$self->polynomial});
-    while (my ($pow,$c) = each @{$self->polynomial}) {
-        my $coeff = show_var(d => $d, c => $c, pow => $pow);
-        unshift @res, $coeff if $coeff; 
-    }
-
-    join(' + ', @res);
-}
+#sub _print {
+#    my $self = shift;
+#    my $d = $self->d;
+#    my @res;
+#    return 0 if ($self->k == grep {$_ == 0} @{$self->polynomial});
+#    while (my ($pow,$c) = each @{$self->polynomial}) {
+#        my $coeff = show_var(d => $d, c => $c, pow => $pow);
+#        unshift @res, $coeff if $coeff; 
+#    }
+#
+#    join(' + ', @res);
+#}
 
 sub _build_polynomial {
     my $self = shift;
@@ -195,6 +210,65 @@ sub _build_polynomial {
 
 __PACKAGE__->meta->make_immutable;
 no Moose;
+
+sub show_polynomial {
+    my %args = (
+        before  => '',
+        after   => '',
+        noblank => 0,
+        default => '',
+        around  => ['', ''],
+        @_
+    );
+
+    for my $required (qw(poly del)) {
+        croak "You must pass '$required' argument"
+            unless defined $args{$required};
+    }
+
+    my ($k, $d) = ($args{poly}->k, $args{poly}->d);
+    my @polynomial = @{$args{poly}->polynomial};
+    my @res;
+    my $all_zeroes = 1;
+#    p @polynomial;
+
+    while (my ($i, $c) = each @polynomial) {
+        my $coeff = $args{default};
+        my $blank = not $c;
+ 
+        unless ($blank) {
+            $all_zeroes = 0;
+            $coeff = $c == 1 ? '' : $i > 0 ? "$c*" : $c;
+            $coeff = 1 if $c == 1 && $i == 0;
+
+            if ($i > 1) {
+                if ($d > 0) {
+                    $coeff .= "(x+$d)^$i";
+                } else {
+                    $coeff .= "x^$i";
+                }
+            } elsif ($i == 1) {
+                if ($d > 0) {
+                    $coeff .= "(x+$d)";
+                } else {
+                    $coeff .= "x";
+                }
+            }
+        } else {
+            if ($i == $#polynomial and $all_zeroes) {
+                $coeff = 0;
+                $blank = 0;
+            }
+        }
+
+        if (not $blank or not $args{noblank}) {
+          $coeff = $args{around}[0] . $coeff . $args{around}[1] unless $blank;
+          unshift @res, $coeff; 
+        }
+    }
+
+    $args{before} . join($args{del}, @res) . $args{after};
+}
 
 sub show_var {
     my %h = @_;

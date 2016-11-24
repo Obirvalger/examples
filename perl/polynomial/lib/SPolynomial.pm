@@ -18,7 +18,7 @@ use Storable 'dclone';
 use Carp;
 
 Moose::Exporter->setup_import_methods(
-    as_is => [qw(add_mul generate_all my_generate show_polynomial)],
+    as_is => [qw(show_polynomial generate)],
 );
 
 has 'k' => (
@@ -74,11 +74,34 @@ sub to_csv {
 
 sub to_tex {
     my $self = shift;
-    show_polynomial(poly => $self, del => ';');
+    show_polynomial(poly => $self, del => '+', around => ['$','$']);
+}
+
+use overload '*=' => \&_overload_mul_eq, fallback => 1;
+
+sub _overload_mul_eq {
+#    say '*=';
+    my ($self, $c) = @_;
+#    croak "k must be equal in summands" unless $self->k == $other->k;
+    my $polynomial = $self->polynomial;
+    while (my ($i, $coeff)  = each @$polynomial) {
+        for my $f (keys %$coeff) {
+            ($polynomial->[$i]{$f} *= $c) %= $self->k;
+        }
+    }
+    return $self;
+}
+
+use overload '*' => '_overload_mul';#, fallback => 1;
+sub _overload_mul {
+#    say '*';
+    my ($c, $self) = @_;
+    my $tmp = dclone $self;
+    $tmp *= $c;
+    return $tmp;
 }
 
 use overload '+=' => \&_overload_add_eq, fallback => 1;
-
 sub _overload_add_eq {
 #    say '+=';
     my ($self, $other) = @_;
@@ -142,6 +165,7 @@ sub polarize {
     my $a = $self->polynomial;
     my $res;
     for (my $pow = 0; $pow < $k; ++$pow) {
+        no warnings 'uninitialized';
         my $h = $a->[$pow];
         for my $f (@{$self->funcs}) {
             my $c = 0;
@@ -207,11 +231,11 @@ sub _build_polynomial {
         }
     }
 
-    for my $coeff (@$polynomial) {
-        for my $f (@{$self->funcs}) {
-            $coeff->{$f} //= 0;
-        }
-    }
+#    for my $coeff (@$polynomial) {
+#        for my $f (@{$self->funcs}) {
+#            $coeff->{$f} //= 0;
+#        }
+#    }
 
     return $polynomial;
 }
@@ -290,15 +314,22 @@ sub add_mul {
 }
 
 sub generate {
-    croak "Need exactly 3 arguments" unless @_ == 3;
-    my ($s, $t, $k) = @_;
+    my %args = @_;
+    unless (@_ == 6 and grep {defined $_} @args{qw(k gen type)} == 3) {
+        croak "Need exactly 3 named arguments: k, gen, type";
+    }
+
+    my ($s, $t, $k) = @args{qw(gen type k)};
+    croak "The value of type argument must be 1 or 2, you passed $args{type}"
+        unless $t == 1 or $t == 2; 
+
     my $polynomial;
     my @gen = split /;/, $s;
     my @funcs;
     if ($t == 2) {
         my $n = @gen;
         for my $x (@gen) {
-            my ($c, $f) = split(/\./, $x);
+            my ($c, $f) = split(/\*/, $x);
             push @funcs, $f;
             unshift @$polynomial, {$f => $c % $k};
         }
@@ -308,8 +339,8 @@ sub generate {
             unshift @$polynomial, {%{$polynomial->[$n-1]}};
         }
     } elsif ($t == 1) {
-        my ($c1, $f1) = split(/\./, $gen[0]);
-        my ($c2, $f2) = split(/\./, $gen[1]);
+        my ($c1, $f1) = split(/\*/, $gen[0]);
+        my ($c2, $f2) = split(/\*/, $gen[1]);
         push @funcs, $f1, $f2;
         unshift @$polynomial, {$f1 => $c1 % $k};
 
@@ -318,11 +349,11 @@ sub generate {
         }
     }
 
-    for my $coeff (@$polynomial) {
-        for my $f (@funcs) {
-            $coeff->{$f} //= 0;
-        }
-    }
+#    for my $coeff (@$polynomial) {
+#        for my $f (@funcs) {
+#            $coeff->{$f} //= 0;
+#        }
+#    }
 
     return SPolynomial->new(k => $k, polynomial => $polynomial);
 }

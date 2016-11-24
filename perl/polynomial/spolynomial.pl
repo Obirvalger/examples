@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 use feature "say";
-use SPolynomial qw(add_mul generate_all my_generate show_polynomial);
+use SPolynomial qw(generate show_polynomial);
 use Data::Printer;
 use Math::Prime::Util qw(binomial znprimroot is_primitive_root);
 use Getopt::Long;
@@ -23,14 +23,14 @@ $c //= znprimroot($k);
 
 #say Polynomial->new(k => $k, 
 #my @funcs = generate_all("1.g;1.h","1.h;$c.g", $k);
-my @funcs = my_generate("1.g;1.h","1.h;$c.g", $k);
+#my @funcs = my_generate("1.g;1.h","1.h;$c.g", $k);
 #my @funcs = Polynomial::generate_all("1.g;1.h","1.h;$c.g", $k);
 
-my $f = SPolynomial->new(k => 5, str => 'g*x^4 + h*x^3 + h*x^2'); 
+my $f = generate(k => $k, gen => '1*g;1*h', type => 1);
 say $f;
 say $f->to_csv;
 
-=begin  BlockComment  # BlockCommentNo_1
+__END__
 
 say $funcs[0];
 say $funcs[1];
@@ -51,8 +51,3 @@ sub is_all_complex {
     }
     say "Ok";
 }
-
-=end    BlockComment  # BlockCommentNo_1
-
-=cut
-
