@@ -2,12 +2,13 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <numeric>
 #include <omp.h>
 
 using namespace std;
 
-#define N 5
-#define M 5
+#define N 2000
+#define M 2000
 #define STEP 0.01
 
 #define N_DIMS 2
@@ -34,8 +35,9 @@ vector<int> bisect(vector<int> idx)
     double max_span = 0;
     size_t max_ind = 0;
     
-    #pragma omp parallel for
+    #pragma omp parallel for num_threads(1)
     for (size_t i = 0; i < points_matrix.size(); i++) {
+        cout<<"Num threads"<<omp_get_num_threads()<<endl;
         double cur_span = find_span(points_matrix[i], idx);
         if (cur_span > max_span) {
             max_span = cur_span;
@@ -69,7 +71,7 @@ void recursive_bisection(vector<int> idx, int k)
                     make_move_iterator(sorted_idx1.end()));
     sorted_idx1.erase(sorted_idx1.begin() + k1 * sorted_idx1.size() / k, sorted_idx1.end());
     
-    #pragma omp task
+    #pragma omp task if (k1 > 20)
 	recursive_bisection(sorted_idx1, k1);
     #pragma omp task
     recursive_bisection(sorted_idx2, k2);
