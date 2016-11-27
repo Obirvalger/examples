@@ -36,7 +36,7 @@ has 'd' => (
 
 has 'str' => (
     is      => 'bare',
-    reader  => '_str',
+    reader  => 'init_str',
     isa     => 'Str',
 #    required => 1,
 );
@@ -150,7 +150,7 @@ sub csv {
 
 sub _build_polynomial {
     my $self = shift;
-    my $s = $self->_str; 
+    my $s = $self->init_str; 
     my $k = $self->k;
     my $d = $self->d;
     my $polynomial;

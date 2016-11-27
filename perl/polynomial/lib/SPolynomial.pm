@@ -35,7 +35,8 @@ has 'd' => (
 );
 
 has 'str' => (
-    is      => 'ro',
+    is      => 'bare',
+    reader  => 'init_str',
     isa     => 'Str',
 #    required => 1,
 );
@@ -46,8 +47,9 @@ has 'gen' => (
 );
 
 has 'funcs' => (
-    is  => 'ro',
-    isa => 'ArrayRef[Str]',
+    is      => 'ro',
+    writer  => '_write_funcs',
+    isa     => 'ArrayRef[Str]',
     default => sub {['g', 'h']},
 );
 
@@ -185,63 +187,95 @@ sub polarize {
 
 sub _build_polynomial {
     my $self = shift;
+    my ($k, $d) = ($self->k, $self->d);
     my $polynomial;
 
-    if ($self->gen) {
-        my @gen = split /;/, $self->gen;
-        my $n = @gen;
-        for my $x (@gen) {
-            my ($c, $f) = split(/\./, $x);
-            unshift @$polynomial, {$f => $c % $self->k};
-        }
+    my $s = $self->init_str;
 
-        for (my $i = $n; $i < $self->k; ++$i) {
-#            p $polynomial;
-            unshift @$polynomial, {%{$polynomial->[$n-1]}};
-        }
+    my %all_funcs;
+    my $summandst = resummand();
+    my $function = $self->init_str;
+    $function =~ tr/ //d;
+    die "Bad string" unless $function =~ /^ $summandst (\+ $summandst)*+ $/x;
 
-    } else {
-        my $s = $self->str;
-        
-        # powers
-        $s =~ s/([a-z]+)$/$1*x^0/;
-        $s =~ s/\)$/)*x^0/g;
-        $s =~ s/x([^\^])/x^1$1/g;
-        $s =~ s/x$/x^1/;
+    while ($function =~ /$summandst/g) {
+        my %h = %+;
+        $h{d} //= 0;
+        $h{d} =~ s/\s//g;
+        $h{d} += 0;
+        $h{c} //= 1; 
+        $h{c} =~ s/\s//g;
+        $h{c} += 0;
+        $h{pow} //= 1;
+        $h{pow} = 0 unless defined $h{x};
+        $h{funcs} //= 'Int';
+        $h{funcs} =~ tr/*//d;
+        delete $h{x};
 
-        # multiply
-        $s =~ s/(\d+)\*([a-z]+)/$1.$2/g;
-        $s =~ s/(\d+)([a-z]+)/$1.$2/g;
-        $s =~ s/([^\*\.])([a-z]+)/${1}1.$2/g;
-        $s =~ s/^([a-z]+)/1.$1/;
-        
-        # change inner + to Plus
-        $s =~ s/\(([\w\d\.\*]+?)\s*\+\s*([\w\d\.\*]+?)\)/($1Plus$2)/g;
-        
-        # remove some elements to helping parsing   
-        $s =~ s/\(|\)|\*x//g; 
+#            p %h;
 
-        my @summands = map {s/Plus/+/r;} split(/\s*\+\s*/, $s);
-        for my $s (@summands) {
-            my ($coeff, $pow) = split(/\^/, $s);
-            for my $cf (split(/\+/, $coeff)) {
-                my ($c, $f) = split(/\./, $cf);
-                $polynomial->[$pow]{$f} = $c;
-            }
-        }
+        my $funcs = {};
+
+        for (split /\+/, $h{funcs}) {
+            my ($c, $f) = /(\d+)?(.+)/;
+            $c //= 1;
+            $funcs->{$f} = $c * $h{c} % $k;
+            $all_funcs{$f} = 1;
+       }
+
+#      TODO polarizations
+       $polynomial->[$h{pow}] = $funcs;
     }
 
-#    for my $coeff (@$polynomial) {
-#        for my $f (@{$self->funcs}) {
-#            $coeff->{$f} //= 0;
-#        }
-#    }
+    $self->_write_funcs([keys %all_funcs]);
+#        p $polynomial;
+
+    for my $coeff (@$polynomial) {
+        for my $f (@{$self->funcs}) {
+            $coeff->{$f} //= 0;
+        }
+    }
 
     return $polynomial;
 }
 
 __PACKAGE__->meta->make_immutable;
 no Moose;
+
+sub resummand {
+    my $number = qr/\-?\d++/;
+    my $polar = qr/(?:-|\+)?\d++/;
+
+    my $var = qr/(?<x>x)/;
+    my $varst = qr{
+            \($var(?<d>$polar)\)
+        |
+            \((?<d>$number)\+$var\)
+        |
+            $var
+    }x;
+
+    my $expst = qr/$varst\^(?<pow>$number)/;
+
+    my $func = qr/[a-w]\d*+/x;
+    my $c_func = qr/(?: $number \*? )? [a-w]\d*+/x;
+    my $funcst = qr{
+            (?<funcs> $c_func )
+        |   
+            \( (?<funcs> $c_func (?: \+ $c_func)*+ ) \) 
+    }x;
+
+    my $summand = qr/(?: $funcst \*? )? (?: $expst|$varst )/x;
+    my $summandst = qr{
+            (?: (?<c>$number) \*? )?? $summand 
+        |
+            (?<c>$number)?? $funcst
+        |
+            (?<c>$number)
+    }x;
+
+    return $summandst;
+}
 
 sub show_polynomial {
     my %args = (

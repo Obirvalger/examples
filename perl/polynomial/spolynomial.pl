@@ -8,27 +8,29 @@ use Data::Printer;
 use Math::Prime::Util qw(binomial znprimroot is_primitive_root);
 use Getopt::Long;
 
-our $k = 5;
-our $c;
+my $k = 5;
+my $c;
+my $str = 'fx^4 + gx^3 + fx^2 + gx + f';
 
 Getopt::Long::Configure ("bundling");
 GetOptions (
-    'k=i' => \$k,
-    'c=i' => \$c
+    'k=i'   => \$k,
+    'c=i'   => \$c,
+    'str=s' => \$str,
 );
 
 $c //= znprimroot($k);
 
-#say $c;
+#say $str;
 
-#say Polynomial->new(k => $k, 
+say SPolynomial->new(k => $k, str => $str);
 #my @funcs = generate_all("1.g;1.h","1.h;$c.g", $k);
 #my @funcs = my_generate("1.g;1.h","1.h;$c.g", $k);
 #my @funcs = Polynomial::generate_all("1.g;1.h","1.h;$c.g", $k);
 
-my $f = generate(k => $k, gen => '1*g;1*h', type => 1);
-say $f;
-say $f->to_csv;
+#my $f = generate(k => $k, gen => '1*g;1*h', type => 1);
+#say $f;
+#say $f->to_csv;
 
 __END__
 
