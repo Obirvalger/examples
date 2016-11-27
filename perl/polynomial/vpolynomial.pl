@@ -27,7 +27,9 @@ my $k_1 = $k-1;
 my $f = VPolynomial->new(k => $k, str => "${c}x^$k_1 + (x+1)^$k_1");
 my $g = VPolynomial->new(k => $k, str => "${c}(x+1)^$k_1 + (x+2)^$k_1");
 
-say VPolynomial->new(k => $k, str => 0);
+say $f->init_str;
+say $f;
+#say VPolynomial->new(k => $k, str => 0);
 #say show_polynomial(poly => $f, del => ';');
 
 __END__

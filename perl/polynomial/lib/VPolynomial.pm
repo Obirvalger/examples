@@ -344,7 +344,8 @@ sub polar {
     for (my $pow = 0; $pow < $k; ++$pow) {
         my $c = 0;
         for (my $i = $pow; $i < $k; ++$i) {
-            $c += $vector->[$i] * binomial($i, $pow) * powmod(-$d,$i-$pow,$k);
+            $c += $vector->[$i] * binomial($i, $pow) * ($k-$d) ** ($i-$pow);
+#            $c += $vector->[$i] * binomial($i, $pow) * powmod(-$d,$i-$pow,$k);
         }
         $c %= $k;
         $res->[$pow] = $c;

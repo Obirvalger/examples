@@ -80,11 +80,12 @@ sub to_tex {
 }
 
 use overload '*=' => \&_overload_mul_eq, fallback => 1;
+use overload '*' => '_overload_mul';
+use overload '+' => '_overload_add';
+use overload '+=' => \&_overload_add_eq, fallback => 1;
 
 sub _overload_mul_eq {
-#    say '*=';
     my ($self, $c) = @_;
-#    croak "k must be equal in summands" unless $self->k == $other->k;
     my $polynomial = $self->polynomial;
     while (my ($i, $coeff)  = each @$polynomial) {
         for my $f (keys %$coeff) {
@@ -94,18 +95,14 @@ sub _overload_mul_eq {
     return $self;
 }
 
-use overload '*' => '_overload_mul';#, fallback => 1;
 sub _overload_mul {
-#    say '*';
-    my ($c, $self) = @_;
+    my ($self, $c) = @_;
     my $tmp = dclone $self;
     $tmp *= $c;
     return $tmp;
 }
 
-use overload '+=' => \&_overload_add_eq, fallback => 1;
 sub _overload_add_eq {
-#    say '+=';
     my ($self, $other) = @_;
     croak "k must be equal in summands" unless $self->k == $other->k;
     my $spolynomial = $self->polynomial;
@@ -119,9 +116,7 @@ sub _overload_add_eq {
     return $self;
 }
 
-use overload '+' => '_overload_add';#, fallback => 1;
 sub _overload_add {
-#    say '+';
     my ($self, $other) = @_;
     my $tmp = dclone $self;
     $tmp += $other;
@@ -163,23 +158,8 @@ sub mul {
 sub polarize {
     my ($self, $d) = @_;
     my $k = $self->k;
-    $d %= $k;
-    my $a = $self->polynomial;
-    my $res;
-    for (my $pow = 0; $pow < $k; ++$pow) {
-        no warnings 'uninitialized';
-        my $h = $a->[$pow];
-        for my $f (@{$self->funcs}) {
-            my $c = 0;
-            for (my $i = $pow; $i < $k; ++$i) {
-                $c += $a->[$i]->{$f} * binomial($i, $pow) *
-                    powmod(-$d,$i-$pow,$k);
-            }
-            $c %= $k;
-            $res->[$pow]->{$f} = $c;
-        }
-    }
 
+    my $res = polar($k, $self->polynomial, $d - $self->d, $self->funcs);
     return SPolynomial->new(polynomial => $res, d => $d, k => $k);
 }
 
@@ -187,16 +167,17 @@ sub polarize {
 
 sub _build_polynomial {
     my $self = shift;
-    my ($k, $d) = ($self->k, $self->d);
-    my $polynomial;
-
-    my $s = $self->init_str;
-
-    my %all_funcs;
     my $summandst = resummand();
     my $function = $self->init_str;
     $function =~ tr/ //d;
     die "Bad string" unless $function =~ /^ $summandst (\+ $summandst)*+ $/x;
+
+    my ($k, $d) = ($self->k, $self->d);
+
+    my $polynomial;
+    my $polar_polys = {};
+
+    my %all_funcs;
 
     while ($function =~ /$summandst/g) {
         my %h = %+;
@@ -224,11 +205,20 @@ sub _build_polynomial {
        }
 
 #      TODO polarizations
+       $polar_polys->{$h{d}}[$h{pow}] = $funcs;
        $polynomial->[$h{pow}] = $funcs;
     }
 
     $self->_write_funcs([keys %all_funcs]);
 #        p $polynomial;
+
+#    p %$polar_polys;
+    while (my ($i, $v) = each %$polar_polys) {
+        $polar_polys->{$i} = polar($k, $v, $d - $i, $self->funcs);
+    }
+#    p %$polar_polys;
+
+    my $poly = modulo_sum($k, values %$polar_polys);
 
     for my $coeff (@$polynomial) {
         for my $f (@{$self->funcs}) {
@@ -236,11 +226,56 @@ sub _build_polynomial {
         }
     }
 
-    return $polynomial;
+    for my $coeff (@$poly) {
+        $coeff->{Int} //= 0;
+#        for my $f (@{$self->funcs}) {
+#            $coeff->{$f} //= 0;
+#        }
+    }
+
+#    p $poly;
+#    return $polynomial;
+    return $poly;
 }
 
 __PACKAGE__->meta->make_immutable;
 no Moose;
+
+sub modulo_sum {
+    my $k = shift;
+    my $res = [];
+    for my $v (@_) {
+        while (my ($i, $coeff) = each @$v) {
+            for my $f (keys %$coeff) {
+                ($res->[$i]{$f} += $coeff->{$f}) %= $k;
+            }
+        }
+    }
+
+    return $res;
+}
+
+sub polar {
+    my ($k, $polynomial, $d, $funcs) = @_;
+    $d %= $k;
+    my $a = $polynomial;
+    my $res;
+
+    for (my $pow = 0; $pow < $k; ++$pow) {
+        no warnings 'uninitialized';
+        my $h = $a->[$pow];
+        for my $f (@{$funcs}) {
+            my $c = 0;
+            for (my $i = $pow; $i < $k; ++$i) {
+                $c += $a->[$i]->{$f} * binomial($i, $pow) * ($k-$d)**($i-$pow);
+            }
+            $c %= $k;
+            $res->[$pow]->{$f} = $c;
+        }
+    }
+
+    return $res;
+}
 
 sub resummand {
     my $number = qr/\-?\d++/;
@@ -279,6 +314,7 @@ sub resummand {
 
 sub show_polynomial {
     my %args = (
+        del     => ' + ',
         before  => '',
         after   => '',
         noblank => 0,
@@ -287,10 +323,12 @@ sub show_polynomial {
         @_
     );
 
-    for my $required (qw(poly del)) {
+    for my $required (qw(poly)) {
         croak "You must pass '$required' argument"
             unless defined $args{$required};
     }
+
+    $args{around} = [$args{around}, $args{around}] unless ref($args{around});
 
     my ($k, $d) = ($args{poly}->k, $args{poly}->d);
     my @polynomial = @{$args{poly}->polynomial};
@@ -306,7 +344,9 @@ sub show_polynomial {
             $coeff = '';
             my @coeffs;
             for my $f (@keys) {
-                if ($s->{$f} == 1) {
+                if ($f eq 'Int') {
+                    push @coeffs, $s->{$f};
+                } elsif ($s->{$f} == 1) {
                     push @coeffs, $f;
                 } else {
                     push @coeffs, "$s->{$f}*$f";
@@ -315,18 +355,20 @@ sub show_polynomial {
             
             $coeff = join(' + ', @coeffs);
             $coeff = "($coeff)" if @coeffs > 1;
+            $coeff = '' if $coeff eq '1' and $i > 0;
+            $coeff = $coeff . '*' if $i > 0 and $coeff;
 
             if ($i > 1) {
                 if ($d > 0) {
-                    $coeff .= "*(x+$d)^$i";
+                    $coeff .= "(x+$d)^$i";
                 } else {
-                    $coeff .= "*x^$i";
+                    $coeff .= "x^$i";
                 }
             } elsif ($i == 1) {
                 if ($d > 0) {
-                    $coeff .= "*(x+$d)";
+                    $coeff .= "(x+$d)";
                 } else {
-                    $coeff .= "*x";
+                    $coeff .= "x";
                 }
             }
         }

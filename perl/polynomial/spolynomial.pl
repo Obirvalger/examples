@@ -10,12 +10,14 @@ use Getopt::Long;
 
 my $k = 5;
 my $c;
+my $d = 0;
 my $str = 'fx^4 + gx^3 + fx^2 + gx + f';
 
 Getopt::Long::Configure ("bundling");
 GetOptions (
     'k=i'   => \$k,
     'c=i'   => \$c,
+    'd=i'   => \$d,
     'str=s' => \$str,
 );
 
@@ -23,14 +25,9 @@ $c //= znprimroot($k);
 
 #say $str;
 
-say SPolynomial->new(k => $k, str => $str);
-#my @funcs = generate_all("1.g;1.h","1.h;$c.g", $k);
-#my @funcs = my_generate("1.g;1.h","1.h;$c.g", $k);
-#my @funcs = Polynomial::generate_all("1.g;1.h","1.h;$c.g", $k);
-
-#my $f = generate(k => $k, gen => '1*g;1*h', type => 1);
+my $f = SPolynomial->new(k => $k, str => $str);
 #say $f;
-#say $f->to_csv;
+say $f->polarize($d);
 
 __END__
 
