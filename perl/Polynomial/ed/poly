@@ -1,0 +1,3 @@
+#! /usr/bin/sh
+
+vim -p lib/Polynomial.pm polynomial.pl t/*

@@ -16,7 +16,7 @@ for my $mn (500, 1000, 1500, 2000) {
 #    for my $k (100) {
     for my $k (100, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000) {
 #        for my $thr (1,4) {
-        for my $thr (1,2,4,6,8) {
+        for my $thr (1..8) {
             my $t = mk(n => $mn, m => $mn, thr => $thr,
                 k => $k, repeats => $repeats);
             warn "mn $mn thr $thr k $k time $t \n";
