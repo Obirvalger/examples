@@ -83,7 +83,7 @@ sub to_csv {
 
 sub to_tex {
     my $self = shift;
-    show_polynomial(poly => $self, del => '+', around => ['$','$']);
+    show_polynomial(poly => $self, del => '+', around => '$');
 }
 
 
