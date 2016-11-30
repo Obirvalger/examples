@@ -59,6 +59,18 @@ sub _print {
     return $res;
 }
 
+sub fprint {
+    my $self = shift;
+    my $res = '';
+    for my $d (0..$self->k) {
+        my @polys = @{$self->polynomials->[$d]};
+        $res .= join("\n", map {$_->fprint(@_)} @polys) .
+            "\n\n";
+    }
+
+    return $res;
+}
+
 sub to_csv {
     my $self = shift;
     my $res = '';
@@ -68,6 +80,21 @@ sub to_csv {
     }
 
     return $res;
+}
+
+sub fmap {
+    my $self = shift;
+    my $fsub = shift;
+    my $dsub = shift // sub {};
+    my @res;
+
+    for my $d (0..$#{$self->polynomials}) {
+        while (my ($i, $p) = each @{$self->polynomials->[$d]}) {
+            $dsub->() if $i;
+            $fsub->($p, $d, $i);
+        }
+        say '';
+    }
 }
 
 sub is_any_group_complex {

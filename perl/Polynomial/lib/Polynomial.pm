@@ -50,7 +50,7 @@ has 'gen' => (
 
 has 'funcs' => (
     is      => 'ro',
-    writer  => '_write_funcs',
+    writer  => '_funcs',
     isa     => 'ArrayRef[Str]',
 #    default => sub {['g', 'h']},
 );
@@ -63,6 +63,10 @@ has 'polynomial' => (
     builder  => '_build_polynomial',
 ); 
 
+sub BUILD {
+    my $self = shift;
+    $self->polynomial; #build polynomial
+}
 
 use overload
     '""' => \&_print,
@@ -86,25 +90,31 @@ sub to_csv {
 sub fprint {
     my $self = shift;
     my $k = $self->k;
+
+    my %args = @_;
+
     my $c_sub = sub {
         $_ = $_[0];
-        say;
-        my $f = $self->funcs->[0];
-#        say $f;
-        s/$f/f0/g;
-        my $g = $self->funcs->[1];
-#        say $g;
-        s/$g/f1/g;
-        s/\(|\)//g;
+        my $f = $_[1] // 'f';
+        tr/()//d;
         my @a = split /\s*\+\s*/;
-        if (@a > 1) {
+        if (@a > 2) {
+            # Do nothing
+            $_ = $_[0];
+        } elsif (@a == 1) {
+#            p $self->funcs;
+#            p $self->polynomial;
+            my $f0 = $self->funcs->[0];
+            s/$f0/f0/g;
+            my $f1 = $self->funcs->[1];
+            s/$f1/f1/g;
+        } else { # @a == 2
             $a[0] =~ s/^(\d)*//;
             my $c1 = $1 // 1;
             $a[1] =~ s/^(\d)*//;
             my $c2 = $1 // 1;
-            say $a[1];
-            say "$c1 $c2";
-            my $cf = "f@{[invmod($c1, $k)*$c2 % $k + 1]}"; 
+#            say "$c1 $c2";
+            my $cf = "$f@{[invmod($c1, $k)*$c2 % $k + 1]}"; 
             $cf = "$c1*$cf" if $c1 > 0;
             $_ = $cf;
         }
@@ -112,7 +122,7 @@ sub fprint {
         $_[0] = $_;
     };
 
-    show_polynomial(poly => $self, del => ' + ', nonblank => 1, c_sub => $c_sub);
+    show_polynomial(poly => $self, c_sub => $c_sub, %args);
 }
 
 sub to_tex {
@@ -144,6 +154,7 @@ sub _overload_add_eq {
     croak "k must be equal in summands" unless $self->k == $other->k;
     my $spolynomial = $self->polynomial;
     my $opolynomial = $other->polynomial;
+    $self->_funcs(_union($self->funcs, $other->funcs));
     while (my ($i, $coeff)  = each @$opolynomial) {
         for my $f (keys %$coeff) {
             $spolynomial->[$i]{$f} += $coeff->{$f};
@@ -263,8 +274,9 @@ sub _build_polynomial {
     }
     
 
-    $self->_write_funcs([keys %all_funcs]);
+    $self->_funcs([sort keys %all_funcs]);
 
+#    p $self->funcs;
 #    p %all_funcs;
 #    p %$polar_polys;
     while (my ($i, $v) = each %$polar_polys) {
@@ -288,6 +300,13 @@ sub _build_polynomial {
 
 __PACKAGE__->meta->make_immutable;
 no Moose;
+
+sub _union {
+    my %union;
+    for my $e (@{$_[0]}, @{$_[1]}) {$union{$e}++}
+
+    return [sort keys %union];
+}
 
 sub modulo_sum {
     my $k = shift;
@@ -366,13 +385,15 @@ sub resummand {
 
 sub show_polynomial {
     my %args = (
-        del     => ' + ',
-        before  => '',
-        after   => '',
-        noblank => 0,
-        c_sub   => sub {$_[0]},
-        default => '',
-        around  => ['', ''],
+        del        => ' + ',
+        tex        => 0,
+        before     => '',
+        after      => '',
+        noblank    => 0,
+        c_sub      => sub {$_[0]},
+        default    => '',
+        only_funcs => 0,
+        around     => ['', ''],
         @_
     );
 
@@ -386,6 +407,7 @@ sub show_polynomial {
     my ($k, $d) = ($args{poly}->k, $args{poly}->d);
     my @polynomial = @{$args{poly}->polynomial};
     my @res;
+    my @funcs;
 #    p @polynomial;
 
     while (my ($i,$s) = each @polynomial) {
@@ -408,7 +430,17 @@ sub show_polynomial {
             
             $coeff = join(' + ', @coeffs);
             $coeff = "($coeff)" if @coeffs > 1;
+
             $args{c_sub}->($coeff);
+            if ($args{tex}) {
+#                say $f;
+                $coeff =~ s/([a-w])(\d+)/$1_$2/g;
+            }
+            if ($args{only_funcs}) {
+                $coeff =~ s/^\d+\*//;
+                unshift @res, $coeff;
+            }
+
             $coeff = '' if $coeff eq '1' and $i > 0;
             $coeff = $coeff . '*' if $i > 0 and $coeff;
 
@@ -427,7 +459,7 @@ sub show_polynomial {
             }
         }
         
-        if (not $blank or not $args{noblank}) {
+        if ((not $blank or not $args{noblank}) and not $args{only_funcs}) {
           $coeff = $args{around}[0] . $coeff . $args{around}[1] unless $blank;
           unshift @res, $coeff; 
         }

@@ -34,8 +34,10 @@ my $t = Polynomial->new(k => $k,
 
 my $f = Polynomial->new(k => $k, str => $str);
 #my $g = Polynomial->new(k => $k, str => 'x^3 + x');
-say $t->polarize(2);
-say $t->polarize(2)->fprint;
+#say $t->polarize(2);
+say $t->fprint;
+say $t->fprint(only_funcs=>1, del=>'', tex=>1);
+say $t;
 #say $t->init_str;
 #say $t;
 #say $t->polarize(2);

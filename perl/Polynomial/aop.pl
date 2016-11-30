@@ -45,7 +45,7 @@ my $as = AOP->new(k => $k, gens => [$hs, $ts]);
 
 if ($s) {
     open(my $fh, '>', $s);
-    say $fh $as->to_csv;
+    say $fh $as->fprint(del=>';');
 }
 
 if ($v) {
@@ -53,8 +53,16 @@ if ($v) {
     say $fh $av->to_csv;
 }
 
+#say $as->to_csv;
+#$as->fmap(sub {say $_[0]});
+#$as->fmap(sub {print $_[0]->fprint(del => '', only_funcs => 1)}, sub {print ';'});
+
 say $as->min_len(1) == $k ? "Ok all" : "Not ok all";
 say $av->is_any_group_complex(1) ? "Ok group" : "Not ok group";
 
+#$h->polynomial;
+#say $h->funcs;
 #say $as->polynomials->[0][0];
+#say $as->polynomials->[0][0]->funcs;
+#say $as->polynomials->[0][0]->fprint;
 #say $as->polynomials->[0][1];
