@@ -5,6 +5,7 @@ use Moose::Util::TypeConstraints;
 use MyTypes;
 
 use feature 'say';
+use List::Util qw(all);
 use Data::Printer;
 use Data::Dumper;
 use Math::Prime::Util qw(
@@ -13,6 +14,7 @@ use Math::Prime::Util qw(
     is_primitive_root 
     powmod 
     is_prime
+    invmod
 );
 use Storable 'dclone';
 use Carp;
@@ -29,7 +31,7 @@ has 'k' => (
 );
 
 has 'd' => (
-    is      => 'ro',
+    is      => 'rw',
     isa     => 'Uint',
     default => 0,
 );
@@ -38,7 +40,7 @@ has 'str' => (
     is      => 'bare',
     reader  => 'init_str',
     isa     => 'Str',
-#    required => 1,
+    required => 1,
 );
 
 has 'gen' => (
@@ -50,7 +52,7 @@ has 'funcs' => (
     is      => 'ro',
     writer  => '_write_funcs',
     isa     => 'ArrayRef[Str]',
-    default => sub {['g', 'h']},
+#    default => sub {['g', 'h']},
 );
 
 has 'polynomial' => (
@@ -79,6 +81,38 @@ sub _print {
 sub to_csv {
     my $self = shift;
     show_polynomial(poly => $self, del => ';');
+}
+
+sub fprint {
+    my $self = shift;
+    my $k = $self->k;
+    my $c_sub = sub {
+        $_ = $_[0];
+        say;
+        my $f = $self->funcs->[0];
+#        say $f;
+        s/$f/f0/g;
+        my $g = $self->funcs->[1];
+#        say $g;
+        s/$g/f1/g;
+        s/\(|\)//g;
+        my @a = split /\s*\+\s*/;
+        if (@a > 1) {
+            $a[0] =~ s/^(\d)*//;
+            my $c1 = $1 // 1;
+            $a[1] =~ s/^(\d)*//;
+            my $c2 = $1 // 1;
+            say $a[1];
+            say "$c1 $c2";
+            my $cf = "f@{[invmod($c1, $k)*$c2 % $k + 1]}"; 
+            $cf = "$c1*$cf" if $c1 > 0;
+            $_ = $cf;
+        }
+
+        $_[0] = $_;
+    };
+
+    show_polynomial(poly => $self, del => ' + ', nonblank => 1, c_sub => $c_sub);
 }
 
 sub to_tex {
@@ -126,6 +160,17 @@ sub _overload_add {
     return $tmp;
 }
 
+sub zeros {
+    my $self = shift;
+    my $res = [];
+
+    while (my ($i, $x) = each @{$self->polynomial}) {
+        push @$res, $i if all {$_ == 0} values %$x;
+    }
+
+    return $res;
+}
+
 sub len {
     my $self = shift;
     my $sum = 0;
@@ -162,8 +207,11 @@ sub polarize {
     my ($self, $d) = @_;
     my $k = $self->k;
 
+    my $tmp = $self->clone;
     my $res = polar($k, $self->polynomial, $d - $self->d, $self->funcs);
-    return Polynomial->new(polynomial => $res, d => $d, k => $k);
+    $tmp->polynomial($res);
+    $tmp->d($d);
+    return  $tmp;
 }
 
 
@@ -173,7 +221,7 @@ sub _build_polynomial {
     my $summandst = resummand();
     my $function = $self->init_str;
     $function =~ tr/ //d;
-    $function =~ s/- (?= [a-w] | \( )/-1/gx;
+    $function =~ s/- (?= [a-z] | \( )/-1/gx;
     die "Bad string" unless $function =~ /^ $summandst (\+ $summandst)*+ $/x;
 
     my ($k, $d) = ($self->k, $self->d);
@@ -217,6 +265,7 @@ sub _build_polynomial {
 
     $self->_write_funcs([keys %all_funcs]);
 
+#    p %all_funcs;
 #    p %$polar_polys;
     while (my ($i, $v) = each %$polar_polys) {
         $polar_polys->{$i} = polar($k, $v, $d - $i, $self->funcs);
@@ -267,10 +316,12 @@ sub polar {
             my $c = 0;
             for (my $i = $pow; $i < $k; ++$i) {
                 my $binom = 0 + "@{[binomial($i, $pow) % $k]}";
+#                say $binom;
 #                my $binom = binomial($i, $pow);
-                $c += $a->[$i]->{$f} * $binom * ($k-$d)**($i-$pow);
+                $c += $a->[$i]->{$f} * $binom * powmod(-$d, $i-$pow, $k);
             }
             $c %= $k;
+#            say $c;
             $res->[$pow]->{$f} = $c;
         }
     }
@@ -319,6 +370,7 @@ sub show_polynomial {
         before  => '',
         after   => '',
         noblank => 0,
+        c_sub   => sub {$_[0]},
         default => '',
         around  => ['', ''],
         @_
@@ -356,6 +408,7 @@ sub show_polynomial {
             
             $coeff = join(' + ', @coeffs);
             $coeff = "($coeff)" if @coeffs > 1;
+            $args{c_sub}->($coeff);
             $coeff = '' if $coeff eq '1' and $i > 0;
             $coeff = $coeff . '*' if $i > 0 and $coeff;
 

@@ -12,6 +12,8 @@ use Getopt::Long;
 my $k = 5;
 my $c;
 my $e;
+my $v;
+my $s;
 my $csv;
 
 Getopt::Long::Configure ("bundling");
@@ -20,7 +22,8 @@ GetOptions (
     'c=i' => \$c,
     'e=i' => \$e,
     'csv' => \$csv,
-#    'v'   => \$v,
+    'v=s'   => \$v,
+    's=s'   => \$s,
 #    't'   => \$t,
 );
 
@@ -36,12 +39,22 @@ my $h = Polynomial->new(k => $k,
 my $t = Polynomial->new(k => $k, 
     str => "t*x^$k_1 + -$c*h*x^$k_1 + $c*h*(x+$k_1)^$k_1");
 
-#my $a = AOP->new(k => 5,
-#    gens => ["$e*x^$k_1 + (x+1)^$k_1","$e*(x+1)^$k_1 + (x+2)^$k_1"]);
+my $av = AOP->new(k => $k, gens => ["$e*x^$k_1 + (x+1)^$k_1","$e*(x+1)^$k_1 + (x+2)^$k_1"]);
 
-my $a = AOP->new(k => $k, gens => [$hs, $ts]);
-if ($csv) {
-    say $a->to_csv;
-} else {
-    say $a;
+my $as = AOP->new(k => $k, gens => [$hs, $ts]);
+
+if ($s) {
+    open(my $fh, '>', $s);
+    say $fh $as->to_csv;
 }
+
+if ($v) {
+    open(my $fh, '>', $v);
+    say $fh $av->to_csv;
+}
+
+say $as->min_len(1) == $k ? "Ok all" : "Not ok all";
+say $av->is_any_group_complex(1) ? "Ok group" : "Not ok group";
+
+#say $as->polynomials->[0][0];
+#say $as->polynomials->[0][1];

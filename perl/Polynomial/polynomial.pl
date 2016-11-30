@@ -11,7 +11,7 @@ use Getopt::Long;
 my $k = 5;
 my $c;
 my $d = 0;
-my $str = 'f*x^4 + -g*x^4';
+my $str;
 
 Getopt::Long::Configure ("bundling");
 GetOptions (
@@ -24,6 +24,7 @@ GetOptions (
 my $k_1 = $k-1;
 
 $c //= znprimroot($k);
+$str //= "-t*x^$k_1";
 
 my $h = Polynomial->new(k => $k, 
     str => "h*x^$k_1 + $k_1*t*x^$k_1 + t*(x+$k_1)^$k_1");
@@ -33,9 +34,11 @@ my $t = Polynomial->new(k => $k,
 
 my $f = Polynomial->new(k => $k, str => $str);
 #my $g = Polynomial->new(k => $k, str => 'x^3 + x');
-#say $f;
-say $t;
 say $t->polarize(2);
+say $t->polarize(2)->fprint;
+#say $t->init_str;
+#say $t;
+#say $t->polarize(2);
 #say $h;
 
 __END__

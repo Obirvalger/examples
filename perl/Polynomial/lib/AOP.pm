@@ -70,7 +70,57 @@ sub to_csv {
     return $res;
 }
 
-# TODO polarizations
+sub is_any_group_complex {
+    my $self = shift;
+    my $k = $self->k;
+    my $res = 1;
+
+    for my $d (0..$#{$self->polynomials}) {
+        my ($un, $is);
+
+        for my $p (@{$self->polynomials->[$d]}) {
+            ($un, $is) = union_insect($un, $p->zeros);
+            $res = 0 if @$is;
+            warn "Not complex d $d\n" if $_[0] and @$is;
+        }
+    }
+
+    return $res;
+}
+
+sub is_all_complex {
+    my $self = shift;
+    my $k = $self->k;
+    my $res = 1;
+
+    for my $d (0..$#{$self->polynomials}) {
+        while (my ($i, $p) = each @{$self->polynomials->[$d]}) {
+            my $l = $p->len;
+            unless ($l == $k) {
+                warn "Not complex d $d i $i\n" if $_[0];;
+                $res = 0;
+            }
+        }
+    }
+
+    return $res;
+}
+
+sub min_len {
+    my $self = shift;
+    my $k = $self->k;
+    my $min_len = $self->polynomials->[0][0]->len;
+
+    for my $d (0..$#{$self->polynomials}) {
+        for my $p (@{$self->polynomials->[$d]}) {
+            my $l = $p->len;
+            $min_len = $l < $min_len ? $l : $min_len;
+        }
+    }
+
+    return $min_len;
+}
+
 sub _build_polynomials {
     my $self = shift;
     my $k = $self->k;
@@ -89,6 +139,13 @@ sub _build_polynomials {
 
 __PACKAGE__->meta->make_immutable;
 no Moose;
+
+sub union_insect {
+    my (%union, %isect);
+    for my $e (@{$_[0]}, @{$_[1]}) {$union{$e}++ && $isect{$e}++}
+
+    return ([keys %union], [keys %isect]);
+}
 
 sub linear_combs {
     my ($g, $h) = @_;

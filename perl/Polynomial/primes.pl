@@ -13,4 +13,5 @@ $n = next_prime($n) unless is_prime $n;
 for  (;;) {
     say $n;
     $n = next_prime($n);
+    last if defined $ARGV[1] && $n >= $ARGV[1];
 }
