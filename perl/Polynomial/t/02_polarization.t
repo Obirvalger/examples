@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Polynomial qw(generate);
+use Polynomial;
 use Math::Prime::Util qw(binomial znprimroot is_primitive_root);
 use Test::More tests => 10;
 use Data::Printer;

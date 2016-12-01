@@ -1,9 +1,5 @@
 package Polynomial;
 
-use Moose;
-use Moose::Util::TypeConstraints;
-use MyTypes;
-
 use feature 'say';
 use List::Util qw(all);
 use Data::Printer;
@@ -19,14 +15,22 @@ use Math::Prime::Util qw(
 use Storable 'dclone';
 use Carp;
 
+#use parent qw(Exporter);
+#our @ISA = ("Exporter");
+#our @EXPORT_OK = qw(binom_mod);
+
+use Moose;
+use Moose::Util::TypeConstraints;
+use MyTypes;
+use namespace::clean;
+
 Moose::Exporter->setup_import_methods(
-    as_is => [qw(show_polynomial generate binom_mod)],
+    as_is => [qw(binom_mod)],
 );
 
 has 'k' => (
     is      => 'ro',
     isa     => 'Prime',
-#    default => 5,
     required => 1,
 );
 
@@ -79,12 +83,12 @@ use overload
 
 sub _print {
     my $self = shift;
-    show_polynomial(poly => $self, del => ' + ', noblank => 1);
+    $self->show(sep => ' + ', noblank => 1);
 }
 
 sub to_csv {
     my $self = shift;
-    show_polynomial(poly => $self, del => ';');
+    $self->show(sep => ';');
 }
 
 sub fprint {
@@ -122,12 +126,12 @@ sub fprint {
         $_[0] = $_;
     };
 
-    show_polynomial(poly => $self, c_sub => $c_sub, %args);
+    $self->show(c_sub => $c_sub, %args);
 }
 
 sub to_tex {
     my $self = shift;
-    show_polynomial(poly => $self, del => '+', around => '$');
+    $self->show(sep => '+', around => '$');
 }
 
 
@@ -199,27 +203,12 @@ sub clone {
     return $res;
 }
 
-sub mul {
-    my ($self, $c) = @_;
-    my $tmp = dclone $self;
-    for my $coeff (@{$tmp->polynomial}) {
-        for my $f (keys %$coeff) {
-#            p $coeff;
-#            say "$f $$coeff{$f}";
-            $$coeff{$f} *= $c;
-            $$coeff{$f} %= $tmp->k;
-        }
-    }
-    
-    return $tmp;
-}
-
 sub polarize {
     my ($self, $d) = @_;
     my $k = $self->k;
 
     my $tmp = $self->clone;
-    my $res = polar($k, $self->polynomial, $d - $self->d, $self->funcs);
+    my $res = _polar($k, $self->polynomial, $d - $self->d, $self->funcs);
     $tmp->polynomial($res);
     $tmp->d($d);
     return  $tmp;
@@ -236,9 +225,7 @@ sub _build_polynomial {
     die "Bad string" unless $function =~ /^ $summandst (\+ $summandst)*+ $/x;
 
     my ($k, $d) = ($self->k, $self->d);
-
     my $polar_polys = {};
-
     my %all_funcs;
 
     while ($function =~ /$summandst/g) {
@@ -255,14 +242,10 @@ sub _build_polynomial {
         $h{funcs} =~ tr/*//d;
         delete $h{x};
 
-#            p %h;
-
         my $funcs = {};
-
         for (split /\+/, $h{funcs}) {
             my ($c, $f) = /(-?\d+)?(.+)/;
             $c //= 1;
-#            say "C $c";
             $funcs->{$f} = $c * $h{c} % $k;
             $all_funcs{$f} = 1;
         }
@@ -273,33 +256,28 @@ sub _build_polynomial {
         }
     }
     
-
     $self->_funcs([sort keys %all_funcs]);
 
 #    p $self->funcs;
 #    p %all_funcs;
 #    p %$polar_polys;
     while (my ($i, $v) = each %$polar_polys) {
-        $polar_polys->{$i} = polar($k, $v, $d - $i, $self->funcs);
+        $polar_polys->{$i} = _polar($k, $v, $d - $i, $self->funcs);
     }
 #    p %$polar_polys;
 
-    my $poly = modulo_sum($k, values %$polar_polys);
+    my $poly = _modulo_sum($k, values %$polar_polys);
 
     for my $coeff (@$poly) {
         $coeff->{Int} //= 0;
-#        for my $f (@{$self->funcs}) {
-#            $coeff->{$f} //= 0;
-#        }
     }
 
-#    p $poly;
-#    return $polynomial;
     return $poly;
 }
 
 __PACKAGE__->meta->make_immutable;
-no Moose;
+#no Moose;
+#1;
 
 sub _union {
     my %union;
@@ -308,7 +286,7 @@ sub _union {
     return [sort keys %union];
 }
 
-sub modulo_sum {
+sub _modulo_sum {
     my $k = shift;
     my $res = [];
     for my $v (@_) {
@@ -322,7 +300,7 @@ sub modulo_sum {
     return $res;
 }
 
-sub polar {
+sub _polar {
     my ($k, $polynomial, $d, $funcs) = @_;
     $d %= $k;
     my $a = $polynomial;
@@ -383,11 +361,13 @@ sub resummand {
     return $summandst;
 }
 
-sub show_polynomial {
+sub show {
+    my $self = shift;
     my %args = (
-        del        => ' + ',
+        sep        => ' + ',
         tex        => 0,
         before     => '',
+        mul        => '*',
         after      => '',
         noblank    => 0,
         c_sub      => sub {$_[0]},
@@ -397,18 +377,12 @@ sub show_polynomial {
         @_
     );
 
-    for my $required (qw(poly)) {
-        croak "You must pass '$required' argument"
-            unless defined $args{$required};
-    }
-
     $args{around} = [$args{around}, $args{around}] unless ref($args{around});
 
-    my ($k, $d) = ($args{poly}->k, $args{poly}->d);
-    my @polynomial = @{$args{poly}->polynomial};
+    my ($k, $d) = ($self->k, $self->d);
+    my @polynomial = @{$self->polynomial};
     my @res;
     my @funcs;
-#    p @polynomial;
 
     while (my ($i,$s) = each @polynomial) {
         my @keys = sort grep {$s->{$_} > 0} keys %{$s};
@@ -424,7 +398,7 @@ sub show_polynomial {
                 } elsif ($s->{$f} == 1) {
                     push @coeffs, $f;
                 } else {
-                    push @coeffs, "$s->{$f}*$f";
+                    push @coeffs, "$s->{$f}$args{mul}$f";
                 }
             }
             
@@ -433,7 +407,6 @@ sub show_polynomial {
 
             $args{c_sub}->($coeff);
             if ($args{tex}) {
-#                say $f;
                 $coeff =~ s/([a-w])(\d+)/$1_$2/g;
             }
             if ($args{only_funcs}) {
@@ -442,7 +415,7 @@ sub show_polynomial {
             }
 
             $coeff = '' if $coeff eq '1' and $i > 0;
-            $coeff = $coeff . '*' if $i > 0 and $coeff;
+            $coeff = $coeff . $args{mul} if $i > 0 and $coeff;
 
             if ($i > 1) {
                 if ($d > 0) {
@@ -465,91 +438,7 @@ sub show_polynomial {
         }
     }
 
-    $args{before} . join($args{del}, @res) . $args{after};
-}
-
-sub add_mul {
-    my ($p1, $p2, $c) = @_;
-    $c //= 1;
-
-    return $p1 + $p2->mul($c);
-}
-
-sub generate {
-    my %args = @_;
-    unless (@_ == 6 and grep {defined $_} @args{qw(k gen type)} == 3) {
-        croak "Need exactly 3 named arguments: k, gen, type";
-    }
-
-    my ($s, $t, $k) = @args{qw(gen type k)};
-    croak "The value of type argument must be 1 or 2, you passed $args{type}"
-        unless $t == 1 or $t == 2; 
-
-    my $polynomial;
-    my @gen = split /;/, $s;
-    my @funcs;
-    if ($t == 2) {
-        my $n = @gen;
-        for my $x (@gen) {
-            my ($c, $f) = split(/\*/, $x);
-            push @funcs, $f;
-            unshift @$polynomial, {$f => $c % $k};
-        }
-
-        for (my $i = $n; $i < $k; ++$i) {
-#            p $polynomial;
-            unshift @$polynomial, {%{$polynomial->[$n-1]}};
-        }
-    } elsif ($t == 1) {
-        my ($c1, $f1) = split(/\*/, $gen[0]);
-        my ($c2, $f2) = split(/\*/, $gen[1]);
-        push @funcs, $f1, $f2;
-        unshift @$polynomial, {$f1 => $c1 % $k};
-
-        for my $i (1..$k-1) {
-            unshift @$polynomial, {$f2 => $c2 % $k};
-        }
-    }
-
-#    for my $coeff (@$polynomial) {
-#        for my $f (@funcs) {
-#            $coeff->{$f} //= 0;
-#        }
-#    }
-
-    return Polynomial->new(k => $k, polynomial => $polynomial);
-}
-
-sub my_generate {
-    my ($g, $h, $k) = @_;
-    my @res;
-    my $f0 = generate($g,1,$k);
-    my $f1 = generate($h,1,$k);
-    
-    push @res, $f0, $f1;
-#    say $f0;
-#    say $f1;
-    for my $c (1..$k-1) {
-#        say add_mul($f0,$f1,$c);
-        push @res, add_mul($f0,$f1,$c);
-    }
-
-    @res;
-}
-
-sub generate_all {
-    my ($g, $h, $k) = @_;
-    my @res;
-    my $f0 = Polynomial->new(k => $k, gen => $g);
-    my $f1 = Polynomial->new(k => $k, gen => $h);
-    
-    push @res, $f0, $f1;
-
-    for my $c (1..$k-1) {
-        push @res, add_mul($f0,$f1,$c);
-    }
-
-    @res;
+    $args{before} . join($args{sep}, @res) . $args{after};
 }
 
 sub prime_root {

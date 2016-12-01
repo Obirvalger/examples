@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 use feature "say";
-use Polynomial qw(generate show_polynomial binom_mod);
+use Polynomial qw(binom_mod);
 use Data::Printer;
 use Math::Prime::Util qw(binomial znprimroot is_primitive_root);
 use Getopt::Long;
@@ -36,7 +36,7 @@ my $f = Polynomial->new(k => $k, str => $str);
 #my $g = Polynomial->new(k => $k, str => 'x^3 + x');
 #say $t->polarize(2);
 say $t->fprint;
-say $t->fprint(only_funcs=>1, del=>'', tex=>1);
+#say $t->fprint(only_funcs=>1, del=>'');
 say $t;
 #say $t->init_str;
 #say $t;

@@ -71,6 +71,43 @@ sub fprint {
     return $res;
 }
 
+sub show {
+    my $self = shift;
+    my %args = (
+        dsep       => "\n\n",
+        psep       => "\n",
+        tex        => 0,
+        before     => '',
+        after      => '',
+        noblank    => 0,
+        c_sub      => sub {$_[0]},
+        default    => '',
+        only_funcs => 0,
+        around     => ['', ''],
+        poly_show  => {},
+        @_
+    );
+    my %pargs = %{$args{poly_show}};
+    $args{around} = [$args{around}, $args{around}] unless ref($args{around});
+    $args{psep} = $args{sep};
+    $args{dsep} = $args{sep};
+    for my $s (@{$args{around}}) {
+        chomp($s);
+        $s .= "\n" if $s;
+    }
+
+    my $res = $args{before};
+    for my $d (0..$self->k) {
+        $res .= $args{around}[0];
+        $res .= join($args{psep},
+            map {$_->show(%pargs)} @{$self->polynomials->[$d]}) . $args{dsep};
+        $res .= $args{around}[1];
+    }
+    $res .= $args{after};
+
+    return $res;
+}
+
 sub to_csv {
     my $self = shift;
     my $res = '';
@@ -80,6 +117,10 @@ sub to_csv {
     }
 
     return $res;
+}
+
+sub to_tex_table {
+    my $self = shift;
 }
 
 sub fmap {
@@ -177,6 +218,6 @@ sub union_insect {
 sub linear_combs {
     my ($g, $h) = @_;
     my $k = $g->k;
-    push @_, $g + $h->mul($_) for 1..$k-1;
+    push @_, $g + $_ * $h for 1..$k-1;
     @_;
 }

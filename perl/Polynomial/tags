@@ -1,0 +1,408 @@
+!_TAG_FILE_FORMAT	2	/extended format/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted/
+!_TAG_PROGRAM_AUTHOR	Michael Schaap	/mscha@mscha.com/
+!_TAG_PROGRAM_NAME	pltags	//
+!_TAG_PROGRAM_VERSION	2.21	/supports multiple tags and extended format/
+AOP	lib/AOP.pm	/^package AOP;$/;"	p	class:AOP
+BUILD	lib/Polynomial.pm	/^sub BUILD {$/;"	s	class:Polynomial
+MyTypes	lib/MyTypes.pm	/^package MyTypes;$/;"	p	class:MyTypes
+Polynomial	lib/Polynomial.pm	/^package Polynomial;$/;"	p	class:Polynomial
+_	lib/Polynomial.pm	/^        $_ = $_[0];$/;"	v	file:	class:Polynomial
+_	lib/Polynomial.pm	/^        @_$/;"	v	file:	class:Polynomial
+_build_polynomial	lib/Polynomial.pm	/^sub _build_polynomial {$/;"	s	class:Polynomial
+_build_polynomials	lib/AOP.pm	/^sub _build_polynomials {$/;"	s	class:AOP
+_overload_add	lib/Polynomial.pm	/^sub _overload_add {$/;"	s	class:Polynomial
+_overload_add_eq	lib/Polynomial.pm	/^sub _overload_add_eq {$/;"	s	class:Polynomial
+_overload_mul	lib/Polynomial.pm	/^sub _overload_mul {$/;"	s	class:Polynomial
+_overload_mul_eq	lib/Polynomial.pm	/^sub _overload_mul_eq {$/;"	s	class:Polynomial
+_print	lib/AOP.pm	/^sub _print {$/;"	s	class:AOP
+_print	lib/Polynomial.pm	/^sub _print {$/;"	s	class:Polynomial
+_union	lib/Polynomial.pm	/^sub _union {$/;"	s	class:Polynomial
+a	lib/Polynomial.pm	/^        my @a = split \/\\s*\\+\\s*\/;$/;"	v	file:	class:Polynomial
+a	lib/Polynomial.pm	/^    my $a = $polynomial;$/;"	v	file:	class:Polynomial
+a	refun.pl	/^        my ($a, $b) = @_;$/;"	v	file:
+a	refun.pl	/^    my @a = @_;$/;"	v	file:
+ad	refun.pl	/^        my ($tmp1, $ad) = split(\/\\^\/, $a);$/;"	v	file:
+add_mul	lib/Polynomial.pm	/^sub add_mul {$/;"	s	class:Polynomial
+add_mul	refun.pl	/^sub add_mul {$/;"	s	file:
+all_funcs	lib/Polynomial.pm	/^    my %all_funcs;$/;"	v	file:	class:Polynomial
+args	lib/Polynomial.pm	/^    my %args = ($/;"	v	file:	class:Polynomial
+args	lib/Polynomial.pm	/^    my %args = @_;$/;"	v	file:	class:Polynomial
+args	lib/Polynomial.pm	/^    my %args = @_;$/;"	v	file:	class:Polynomial
+as	aop.pl	/^my $as = AOP->new(k => $k, gens => [$hs, $ts]);$/;"	v	file:
+av	aop.pl	/^my $av = AOP->new(k => $k, gens => ["$e*x^$k_1 + (x+1)^$k_1","$e*(x+1)^$k_1 + (x+2)^$k_1"]);$/;"	v	file:
+b	refun.pl	/^        my ($a, $b) = @_;$/;"	v	file:
+bd	refun.pl	/^        my ($tmp2, $bd) = split(\/\\^\/, $b);$/;"	v	file:
+binom	lib/Polynomial.pm	/^                my $binom = 0 + "@{[binomial($i, $pow) % $k]}";$/;"	v	file:	class:Polynomial
+binom_mod	lib/Polynomial.pm	/^sub binom_mod { $/;"	s	class:Polynomial
+binomial	refun.pl	/^sub binomial { $/;"	s	file:
+blank	lib/Polynomial.pm	/^        my $blank = not @keys;$/;"	v	file:	class:Polynomial
+c	aop.pl	/^my $c;$/;"	v	file:
+c	lib/Polynomial.pm	/^            my $c = 0;$/;"	v	file:	class:Polynomial
+c	lib/Polynomial.pm	/^            my ($c, $f) = \/(-?\\d+)?(.+)\/;$/;"	v	file:	class:Polynomial
+c	lib/Polynomial.pm	/^            my ($c, $f) = split(\/\\*\/, $x);$/;"	v	file:	class:Polynomial
+c	lib/Polynomial.pm	/^    my ($p1, $p2, $c) = @_;$/;"	v	file:	class:Polynomial
+c	lib/Polynomial.pm	/^    my ($self, $c) = @_;$/;"	v	file:	class:Polynomial
+c	lib/Polynomial.pm	/^    my ($self, $c) = @_;$/;"	v	file:	class:Polynomial
+c	lib/Polynomial.pm	/^    my ($self, $c) = @_;$/;"	v	file:	class:Polynomial
+c	polynomial.pl	/^my $c;$/;"	v	file:
+c	refun.pl	/^            my $c = (binomial($e, $i) * $d ** $i) % $k; # const$/;"	v	file:
+c	refun.pl	/^    my ($c, $s) = @_;$/;"	v	file:
+c	refun.pl	/^    my ($f, $g, $c) = @_;$/;"	v	file:
+c	refun.pl	/^our $c = 2;$/;"	v	file:
+c	spolynomial.pl	/^my $c;$/;"	v	file:
+c	vpolynomial.pl	/^my $c;$/;"	v	file:
+c1	lib/Polynomial.pm	/^            my $c1 = $1 \/\/ 1;$/;"	v	file:	class:Polynomial
+c1	lib/Polynomial.pm	/^        my ($c1, $f1) = split(\/\\*\/, $gen[0]);$/;"	v	file:	class:Polynomial
+c2	lib/Polynomial.pm	/^            my $c2 = $1 \/\/ 1;$/;"	v	file:	class:Polynomial
+c2	lib/Polynomial.pm	/^        my ($c2, $f2) = split(\/\\*\/, $gen[1]);$/;"	v	file:	class:Polynomial
+c_func	lib/Polynomial.pm	/^            (?<funcs> $c_func )$/;"	v	file:	class:Polynomial
+c_func	lib/Polynomial.pm	/^            \\( (?<funcs> $c_func (?: \\+ $c_func)*+ ) \\) $/;"	v	file:	class:Polynomial
+c_func	lib/Polynomial.pm	/^            \\( (?<funcs> $c_func (?: \\+ $c_func)*+ ) \\) $/;"	v	file:	class:Polynomial
+c_func	lib/Polynomial.pm	/^    my $c_func = qr\/(?: $number \\*? )? [a-w]\\d*+\/x;$/;"	v	file:	class:Polynomial
+c_mul_r	refun.pl	/^my $c_mul_r    = qr\/\\Q$c_mul_s\\E\/;$/;"	v	file:
+c_mul_s	refun.pl	/^my $c_mul_s    = q\/.\/;$/;"	v	file:
+c_sub	lib/Polynomial.pm	/^    my $c_sub = sub {$/;"	v	file:	class:Polynomial
+cf	lib/Polynomial.pm	/^            my $cf = "$f@{[invmod($c1, $k)*$c2 % $k + 1]}"; $/;"	v	file:	class:Polynomial
+cf	refun.pl	/^            my ($cf, $fs) = split($c_mul_r, $fun);$/;"	v	file:
+cf	refun.pl	/^        my ($cf, $x_pow) = split($x_mul_r, $summand);$/;"	v	file:
+clone	lib/Polynomial.pm	/^sub clone {$/;"	s	class:Polynomial
+coeff	lib/Polynomial.pm	/^        my $coeff = $args{default};$/;"	v	file:	class:Polynomial
+coeffs	lib/Polynomial.pm	/^            my @coeffs;$/;"	v	file:	class:Polynomial
+collect	refun.pl	/^sub collect {$/;"	s	file:
+const_multiply	refun.pl	/^sub const_multiply {$/;"	s	file:
+conv	refun.pl	/^sub conv {$/;"	s	file:
+cs	refun.pl	/^                my $cs = $cf * $cx % $k;$/;"	v	file:
+cs	refun.pl	/^            my $cs = "$c$c_mul_s";$/;"	v	file:
+cs	refun.pl	/^        my ($cs, $fs) = split($c_mul_r, $cf);$/;"	v	file:
+csv	aop.pl	/^my $csv;$/;"	v	file:
+cx	refun.pl	/^                my ($cx, $xs);$/;"	v	file:
+d	lib/Polynomial.pm	/^    my ($k, $d) = ($args{poly}->k, $args{poly}->d);$/;"	v	file:	class:Polynomial
+d	lib/Polynomial.pm	/^    my ($k, $d) = ($self->k, $self->d);$/;"	v	file:	class:Polynomial
+d	lib/Polynomial.pm	/^    my ($k, $polynomial, $d, $funcs) = @_;$/;"	v	file:	class:Polynomial
+d	lib/Polynomial.pm	/^    my ($self, $d) = @_;$/;"	v	file:	class:Polynomial
+d	polynomial.pl	/^my $d = 0;$/;"	v	file:
+d	refun.pl	/^        my ($x, $d, $e) = @_;$/;"	v	file:
+d	refun.pl	/^    my ($s, $d) = @_;$/;"	v	file:
+d	refun.pl	/^    my ($s, $d) = @_;$/;"	v	file:
+d	spolynomial.pl	/^my $d = 0;$/;"	v	file:
+dp	refun.pl	/^        my $dp = 0; # debugging print$/;"	v	file:
+dp	refun.pl	/^    my $dp = 0; # debugging print$/;"	v	file:
+dsub	lib/AOP.pm	/^    my $dsub = shift \/\/ sub {};$/;"	v	file:	class:AOP
+e	aop.pl	/^my $e;$/;"	v	file:
+e	refun.pl	/^        my ($x, $d, $e) = @_;$/;"	v	file:
+expand	refun.pl	/^sub expand { $/;"	s	file:
+expand_one	refun.pl	/^    sub expand_one {$/;"	s	file:
+expst	lib/Polynomial.pm	/^    my $expst = qr\/$varst\\^(?<pow>$number)\/;$/;"	v	file:	class:Polynomial
+f	lib/Polynomial.pm	/^            my ($c, $f) = \/(-?\\d+)?(.+)\/;$/;"	v	file:	class:Polynomial
+f	lib/Polynomial.pm	/^            my ($c, $f) = split(\/\\*\/, $x);$/;"	v	file:	class:Polynomial
+f	lib/Polynomial.pm	/^        my $f = $_[1] \/\/ 'f';$/;"	v	file:	class:Polynomial
+f	polynomial.pl	/^my $f = Polynomial->new(k => $k, str => $str);$/;"	v	file:
+f	refun.pl	/^    my ($f, $g, $c) = @_;$/;"	v	file:
+f	refun.pl	/^    my @f = split \/;\/, shift;$/;"	v	file:
+f	refun.pl	/^my ($f, $p);$/;"	v	file:
+f	spolynomial.pl	/^my $f = SPolynomial->new(k => $k, str => $str);$/;"	v	file:
+f	vpolynomial.pl	/^my $f = VPolynomial->new(k => $k, str => "${c}x^$k_1 + (x+1)^$k_1");$/;"	v	file:
+f0	lib/Polynomial.pm	/^            my $f0 = $self->funcs->[0];$/;"	v	file:	class:Polynomial
+f0	lib/Polynomial.pm	/^    my $f0 = Polynomial->new(k => $k, gen => $g);$/;"	v	file:	class:Polynomial
+f0	lib/Polynomial.pm	/^    my $f0 = generate($g,1,$k);$/;"	v	file:	class:Polynomial
+f0	refun.pl	/^    my $f0 = "g*x^4 + h*x^3 + g*x^2 + h*x + g";$/;"	v	file:
+f1	lib/Polynomial.pm	/^            my $f1 = $self->funcs->[1];$/;"	v	file:	class:Polynomial
+f1	lib/Polynomial.pm	/^        my ($c1, $f1) = split(\/\\*\/, $gen[0]);$/;"	v	file:	class:Polynomial
+f1	lib/Polynomial.pm	/^    my $f1 = Polynomial->new(k => $k, gen => $h);$/;"	v	file:	class:Polynomial
+f1	lib/Polynomial.pm	/^    my $f1 = generate($h,1,$k);$/;"	v	file:	class:Polynomial
+f1	refun.pl	/^    my $f1 = "h*x^4 + 2*g*x^3 + h*x^2 + 2*g*x + h";$/;"	v	file:
+f2	lib/Polynomial.pm	/^        my ($c2, $f2) = split(\/\\*\/, $gen[1]);$/;"	v	file:	class:Polynomial
+f2	refun.pl	/^    my $f2 = "(g + h)*x^4 + (2*g + h)*x^3 + (g + h)*x^2 + (2*g + h)*x + (g + h)";$/;"	v	file:
+f3	refun.pl	/^    my $f3="(g + 2*h)*x^4 + (4*g + h)*x^3 + (g + 2*h)*x^2 + (4*g + h)*x + (g + 2*h)";$/;"	v	file:
+f4	refun.pl	/^    my $f4="(g + 3*h)*x^4 + (g + h)*x^3 + (g + 3*h)*x^2 + (g + h)*x + (g + 3*h)";$/;"	v	file:
+f5	refun.pl	/^    my $f5="(g + 4*h)*x^4 + (3*g + h)*x^3 + (g + 4*h)*x^2 + (3*g + h)*x + (g + 4*h)";$/;"	v	file:
+factmod	lib/Polynomial.pm	/^sub factmod {$/;"	s	class:Polynomial
+fail	refun.pl	/^            my $fail = "Fail test_complex\\n";$/;"	v	file:
+fail	refun.pl	/^        my $fail = "Fail test_arithmetic_operations\\n";$/;"	v	file:
+fail	refun.pl	/^        my $fail = "Fail test_generate\\n";$/;"	v	file:
+fail	refun.pl	/^        my $fail = "Fail test_in_out_identity\\n";$/;"	v	file:
+fail	refun.pl	/^        my $fail = "Fail test_zero_polarization\\n";$/;"	v	file:
+fmap	lib/AOP.pm	/^sub fmap {$/;"	s	class:AOP
+fn	refun.pl	/^    my $fn = '';$/;"	v	file:
+fprint	lib/AOP.pm	/^sub fprint {$/;"	s	class:AOP
+fprint	lib/Polynomial.pm	/^sub fprint {$/;"	s	class:Polynomial
+fs	refun.pl	/^            my ($cf, $fs) = split($c_mul_r, $fun);$/;"	v	file:
+fs	refun.pl	/^        my ($cs, $fs) = split($c_mul_r, $cf);$/;"	v	file:
+fsub	lib/AOP.pm	/^    my $fsub = shift;$/;"	v	file:	class:AOP
+func	lib/Polynomial.pm	/^    my $func = qr\/[a-w]\\d*+\/x;$/;"	v	file:	class:Polynomial
+funcs	lib/Polynomial.pm	/^        my $funcs = {};$/;"	v	file:	class:Polynomial
+funcs	lib/Polynomial.pm	/^    my ($k, $polynomial, $d, $funcs) = @_;$/;"	v	file:	class:Polynomial
+funcs	lib/Polynomial.pm	/^    my @funcs;$/;"	v	file:	class:Polynomial
+funcs	lib/Polynomial.pm	/^    my @funcs;$/;"	v	file:	class:Polynomial
+funcs	polynomial.pl	/^    my @funcs = @_;$/;"	v	file:
+funcs	refun.pl	/^    my @funcs = @_;$/;"	v	file:
+funcs	refun.pl	/^my @funcs = generate("1.g;1.h","1.h;$c.g", $k);$/;"	v	file:
+funcs	spolynomial.pl	/^    my @funcs = @_;$/;"	v	file:
+funcs	vpolynomial.pl	/^    my @funcs = @_;$/;"	v	file:
+funcs	vpolynomial.pl	/^my @funcs = generate("1.g;1.h","1.h;$c.g", $k);$/;"	v	file:
+funcs5	refun.pl	/^    my @funcs5 = generate('1.g;1.h','1.h;2.g', 5);$/;"	v	file:
+funcst	lib/Polynomial.pm	/^            (?<c>$number)?? $funcst$/;"	v	file:	class:Polynomial
+funcst	lib/Polynomial.pm	/^    my $funcst = qr{$/;"	v	file:	class:Polynomial
+function	lib/Polynomial.pm	/^    my $function = $self->init_str;$/;"	v	file:	class:Polynomial
+functions	refun.pl	/^        my @functions = sort {$a cmp $b} keys %{$powers{$x_pow}};$/;"	v	file:
+functions	refun.pl	/^    my @functions = ($f0, $f1, $f2, $f3, $f4, $f5);$/;"	v	file:
+g	lib/AOP.pm	/^    my $g = Polynomial->new(k => $k, str => $self->gens->[0]);$/;"	v	file:	class:AOP
+g	lib/AOP.pm	/^    my ($g, $h) = @_;$/;"	v	file:	class:AOP
+g	lib/Polynomial.pm	/^    my ($g, $h, $k) = @_;$/;"	v	file:	class:Polynomial
+g	lib/Polynomial.pm	/^    my ($g, $h, $k) = @_;$/;"	v	file:	class:Polynomial
+g	refun.pl	/^    my ($f, $g, $c) = @_;$/;"	v	file:
+g	refun.pl	/^    my @g = split \/;\/, shift;$/;"	v	file:
+g	vpolynomial.pl	/^my $g = VPolynomial->new(k => $k, str => "${c}(x+1)^$k_1 + (x+2)^$k_1");$/;"	v	file:
+gc	refun.pl	/^            my ($gc, $gf) = split($c_mul_r, $gh[0]);$/;"	v	file:
+gen	lib/Polynomial.pm	/^    my @gen = split \/;\/, $s;$/;"	v	file:	class:Polynomial
+generate	lib/Polynomial.pm	/^sub generate {$/;"	s	class:Polynomial
+generate	refun.pl	/^sub generate {$/;"	s	file:
+generate_all	lib/Polynomial.pm	/^sub generate_all {$/;"	s	class:Polynomial
+gf	refun.pl	/^            my ($gc, $gf) = split($c_mul_r, $gh[0]);$/;"	v	file:
+gh	refun.pl	/^            my @gh = split($in_plus_r,$f);$/;"	v	file:
+gn	refun.pl	/^    my $gn = '';$/;"	v	file:
+h	aop.pl	/^my $h = Polynomial->new(k => $k, $/;"	v	file:
+h	lib/AOP.pm	/^    my $h = Polynomial->new(k => $k, str => $self->gens->[1]);$/;"	v	file:	class:AOP
+h	lib/AOP.pm	/^    my ($g, $h) = @_;$/;"	v	file:	class:AOP
+h	lib/Polynomial.pm	/^        my $h = $a->[$pow];$/;"	v	file:	class:Polynomial
+h	lib/Polynomial.pm	/^        my %h = %+;$/;"	v	file:	class:Polynomial
+h	lib/Polynomial.pm	/^    my ($g, $h, $k) = @_;$/;"	v	file:	class:Polynomial
+h	lib/Polynomial.pm	/^    my ($g, $h, $k) = @_;$/;"	v	file:	class:Polynomial
+h	polynomial.pl	/^my $h = Polynomial->new(k => $k, $/;"	v	file:
+h	vpolynomial.pl	/^                my $h = ($f + $g->mul($c))->polarize($d);$/;"	v	file:
+hc	refun.pl	/^            my ($hc, $hf) = split($c_mul_r, $gh[1]);$/;"	v	file:
+hf	refun.pl	/^            my ($hc, $hf) = split($c_mul_r, $gh[1]);$/;"	v	file:
+hs	aop.pl	/^my $hs =  "h*x^$k_1 + $k_1*t*x^$k_1 + t*(x+$k_1)^$k_1";$/;"	v	file:
+in1	refun.pl	/^        my $in1 = in_format($fs);$/;"	v	file:
+in2	refun.pl	/^        my $in2 = in_format(in_format($fs));$/;"	v	file:
+in_format	refun.pl	/^sub in_format {$/;"	s	file:
+in_plus_r	refun.pl	/^my $in_plus_r  = qr\/\\Q$in_plus_s\\E\/;$/;"	v	file:
+in_plus_s	refun.pl	/^my $in_plus_s  = q\/ <+> \/;$/;"	v	file:
+invert	refun.pl	/^sub invert {$/;"	s	file:
+is	lib/AOP.pm	/^        my ($un, $is);$/;"	v	file:	class:AOP
+is_all_complex	lib/AOP.pm	/^sub is_all_complex {$/;"	s	class:AOP
+is_all_complex	polynomial.pl	/^sub is_all_complex {$/;"	s	file:
+is_all_complex	spolynomial.pl	/^sub is_all_complex {$/;"	s	file:
+is_all_complex	vpolynomial.pl	/^sub is_all_complex {$/;"	s	file:
+is_any_group_complex	lib/AOP.pm	/^sub is_any_group_complex {$/;"	s	class:AOP
+is_complex	refun.pl	/^sub is_complex {$/;"	s	file:
+isect	lib/AOP.pm	/^    my (%union, %isect);$/;"	v	file:	class:AOP
+k	aop.pl	/^my $k = 5;$/;"	v	file:
+k	lib/AOP.pm	/^    my $k = $g->k;$/;"	v	file:	class:AOP
+k	lib/AOP.pm	/^    my $k = $self->k;$/;"	v	file:	class:AOP
+k	lib/AOP.pm	/^    my $k = $self->k;$/;"	v	file:	class:AOP
+k	lib/AOP.pm	/^    my $k = $self->k;$/;"	v	file:	class:AOP
+k	lib/AOP.pm	/^    my $k = $self->k;$/;"	v	file:	class:AOP
+k	lib/Polynomial.pm	/^    my $k = $self->k;$/;"	v	file:	class:Polynomial
+k	lib/Polynomial.pm	/^    my $k = $self->k;$/;"	v	file:	class:Polynomial
+k	lib/Polynomial.pm	/^    my $k = shift;$/;"	v	file:	class:Polynomial
+k	lib/Polynomial.pm	/^    my $k = shift;$/;"	v	file:	class:Polynomial
+k	lib/Polynomial.pm	/^    my ($g, $h, $k) = @_;$/;"	v	file:	class:Polynomial
+k	lib/Polynomial.pm	/^    my ($g, $h, $k) = @_;$/;"	v	file:	class:Polynomial
+k	lib/Polynomial.pm	/^    my ($k, $d) = ($args{poly}->k, $args{poly}->d);$/;"	v	file:	class:Polynomial
+k	lib/Polynomial.pm	/^    my ($k, $d) = ($self->k, $self->d);$/;"	v	file:	class:Polynomial
+k	lib/Polynomial.pm	/^    my ($k, $polynomial, $d, $funcs) = @_;$/;"	v	file:	class:Polynomial
+k	lib/Polynomial.pm	/^    my ($s, $t, $k) = @args{qw(gen type k)};$/;"	v	file:	class:Polynomial
+k	lib/Polynomial.pm	/^    my($n, $r, $k) = @_;$/;"	v	file:	class:Polynomial
+k	polynomial.pl	/^my $k = 5;$/;"	v	file:
+k	refun.pl	/^    local $k = 5;$/;"	v	file:
+k	refun.pl	/^    my $k = shift;$/;"	v	file:
+k	refun.pl	/^    my $k = shift;$/;"	v	file:
+k	refun.pl	/^our $k = 5;$/;"	v	file:
+k	spolynomial.pl	/^my $k = 5;$/;"	v	file:
+k	vpolynomial.pl	/^my $k = 5;$/;"	v	file:
+k_1	aop.pl	/^my $k_1 = $k - 1;$/;"	v	file:
+k_1	polynomial.pl	/^my $k_1 = $k-1;$/;"	v	file:
+k_1	vpolynomial.pl	/^my $k_1 = $k-1;$/;"	v	file:
+keys	lib/Polynomial.pm	/^        my @keys = sort grep {$s->{$_} > 0} keys %{$s};$/;"	v	file:	class:Polynomial
+l	lib/AOP.pm	/^            my $l = $p->len;$/;"	v	file:	class:AOP
+l	lib/AOP.pm	/^            my $l = $p->len;$/;"	v	file:	class:AOP
+latex_end	refun.pl	/^sub latex_end { say '\\end{document}' }$/;"	s	file:
+latex_polarizations	refun.pl	/^sub latex_polarizations {$/;"	s	file:
+latex_preambule	refun.pl	/^sub latex_preambule {$/;"	s	file:
+latex_table	refun.pl	/^sub latex_table {$/;"	s	file:
+len	lib/Polynomial.pm	/^sub len {$/;"	s	class:Polynomial
+linear_combs	lib/AOP.pm	/^sub linear_combs {$/;"	s	class:AOP
+min_len	lib/AOP.pm	/^    my $min_len = $self->polynomials->[0][0]->len;$/;"	v	file:	class:AOP
+min_len	lib/AOP.pm	/^sub min_len {$/;"	s	class:AOP
+modulo_sum	lib/Polynomial.pm	/^sub modulo_sum {$/;"	s	class:Polynomial
+mos	refun.pl	/^        my @mos = map {[split($in_plus_r, $_)]} @multipliers;$/;"	v	file:
+mul	lib/Polynomial.pm	/^sub mul {$/;"	s	class:Polynomial
+multipliers	refun.pl	/^        my @multipliers = split($x_mul_r, $s);$/;"	v	file:
+my_generate	lib/Polynomial.pm	/^sub my_generate {$/;"	s	class:Polynomial
+n	lib/Polynomial.pm	/^        my $n = @gen;$/;"	v	file:	class:Polynomial
+n	lib/Polynomial.pm	/^    my ($n, $p) = @_;$/;"	v	file:	class:Polynomial
+n	lib/Polynomial.pm	/^    my($n, $r, $k) = @_;$/;"	v	file:	class:Polynomial
+n	primes.pl	/^my $n = $ARGV[0] \/\/ 2;$/;"	v	file:
+n	refun.pl	/^    my $n = shift;$/;"	v	file:
+n	refun.pl	/^    my( $n, $r ) = @_;$/;"	v	file:
+nf	lib/Polynomial.pm	/^        my $nf = factmod($n, $k);$/;"	v	file:	class:Polynomial
+ns	refun.pl	/^            my $ns = split($out_plus_r, $ps);$/;"	v	file:
+ns	refun.pl	/^            my $ns = split($out_plus_r, $ps);$/;"	v	file:
+number	lib/Polynomial.pm	/^            (?: (?<c>$number) \\*? )?? $summand $/;"	v	file:	class:Polynomial
+number	lib/Polynomial.pm	/^            (?<c>$number)$/;"	v	file:	class:Polynomial
+number	lib/Polynomial.pm	/^            (?<c>$number)?? $funcst$/;"	v	file:	class:Polynomial
+number	lib/Polynomial.pm	/^            \\((?<d>$number)\\+$var\\)$/;"	v	file:	class:Polynomial
+number	lib/Polynomial.pm	/^    my $number = qr\/\\-?\\d++\/;$/;"	v	file:	class:Polynomial
+opolynomial	lib/Polynomial.pm	/^    my $opolynomial = $other->polynomial;$/;"	v	file:	class:Polynomial
+other	lib/Polynomial.pm	/^    my ($self, $other) = @_;$/;"	v	file:	class:Polynomial
+other	lib/Polynomial.pm	/^    my ($self, $other) = @_;$/;"	v	file:	class:Polynomial
+out	refun.pl	/^        my $out = out_format(polarize(in_format($fs), 0));$/;"	v	file:
+out1	refun.pl	/^        my $out1 = out_format(in_format($fs));$/;"	v	file:
+out2	refun.pl	/^        my $out2 = out_format(out_format(in_format($fs)));$/;"	v	file:
+out_format	refun.pl	/^sub out_format {$/;"	s	file:
+out_plus_r	refun.pl	/^            split($out_plus_r, in_format(shift));$/;"	v	file:
+out_plus_r	refun.pl	/^my $out_plus_r = qr\/\\Q$out_plus_s\\E\/;$/;"	v	file:
+out_plus_s	refun.pl	/^my $out_plus_s = q\/ >+< \/;$/;"	v	file:
+outer_summands	refun.pl	/^sub outer_summands {$/;"	s	file:
+p	lib/Polynomial.pm	/^    my ($n, $p) = @_;$/;"	v	file:	class:Polynomial
+p	refun.pl	/^            my $p = $e - $i; # power$/;"	v	file:
+p	refun.pl	/^my ($f, $p);$/;"	v	file:
+p1	lib/Polynomial.pm	/^    my ($p1, $p2, $c) = @_;$/;"	v	file:	class:Polynomial
+p2	lib/Polynomial.pm	/^    my ($p1, $p2, $c) = @_;$/;"	v	file:	class:Polynomial
+plus	refun.pl	/^sub plus {$/;"	s	file:
+polar	lib/Polynomial.pm	/^            \\($var(?<d>$polar)\\)$/;"	v	file:	class:Polynomial
+polar	lib/Polynomial.pm	/^    my $polar = qr\/(?:-|\\+)?\\d++\/;$/;"	v	file:	class:Polynomial
+polar	lib/Polynomial.pm	/^sub polar {$/;"	s	class:Polynomial
+polar	refun.pl	/^sub polar {$/;"	s	file:
+polar_polys	lib/Polynomial.pm	/^    my $polar_polys = {};$/;"	v	file:	class:Polynomial
+polarize	lib/Polynomial.pm	/^sub polarize {$/;"	s	class:Polynomial
+polarize	refun.pl	/^sub polarize {$/;"	s	file:
+poly	lib/Polynomial.pm	/^    my $poly = modulo_sum($k, values %$polar_polys);$/;"	v	file:	class:Polynomial
+polynomial	lib/Polynomial.pm	/^    my $polynomial = $self->polynomial;$/;"	v	file:	class:Polynomial
+polynomial	lib/Polynomial.pm	/^    my $polynomial;$/;"	v	file:	class:Polynomial
+polynomial	lib/Polynomial.pm	/^    my ($k, $polynomial, $d, $funcs) = @_;$/;"	v	file:	class:Polynomial
+polynomial	lib/Polynomial.pm	/^    my @polynomial = @{$args{poly}->polynomial};$/;"	v	file:	class:Polynomial
+polys	lib/AOP.pm	/^        my @polys = @{$self->polynomials->[$d]};$/;"	v	file:	class:AOP
+polys	lib/AOP.pm	/^    my @polys = linear_combs($g, $h);$/;"	v	file:	class:AOP
+powM	refun.pl	/^    sub powM {$/;"	s	file:
+powers	refun.pl	/^    my %powers;$/;"	v	file:
+prime_root	lib/Polynomial.pm	/^sub prime_root {$/;"	s	class:Polynomial
+primitive_root	refun.pl	/^sub primitive_root {$/;"	s	file:
+product	refun.pl	/^    my $product = 1;$/;"	v	file:
+ps	refun.pl	/^            my $ps = out_format(polarize(in_format($fun), $d));$/;"	v	file:
+ps	refun.pl	/^            my $ps = polarize(in_format($fun), $d);$/;"	v	file:
+ps	refun.pl	/^            my $ps = polarize(in_format($fun), $d);$/;"	v	file:
+r	lib/Polynomial.pm	/^    my($n, $r, $k) = @_;$/;"	v	file:	class:Polynomial
+r	refun.pl	/^    my( $n, $r ) = @_;$/;"	v	file:
+res	lib/AOP.pm	/^    my $res = '';$/;"	v	file:	class:AOP
+res	lib/AOP.pm	/^    my $res = '';$/;"	v	file:	class:AOP
+res	lib/AOP.pm	/^    my $res = '';$/;"	v	file:	class:AOP
+res	lib/AOP.pm	/^    my $res = 1;$/;"	v	file:	class:AOP
+res	lib/AOP.pm	/^    my $res = 1;$/;"	v	file:	class:AOP
+res	lib/AOP.pm	/^    my @res;$/;"	v	file:	class:AOP
+res	lib/AOP.pm	/^    my @res;$/;"	v	file:	class:AOP
+res	lib/Polynomial.pm	/^	my $res = 1;$/;"	v	file:	class:Polynomial
+res	lib/Polynomial.pm	/^    my $res = [];$/;"	v	file:	class:Polynomial
+res	lib/Polynomial.pm	/^    my $res = [];$/;"	v	file:	class:Polynomial
+res	lib/Polynomial.pm	/^    my $res = dclone $self;$/;"	v	file:	class:Polynomial
+res	lib/Polynomial.pm	/^    my $res = polar($k, $self->polynomial, $d - $self->d, $self->funcs);$/;"	v	file:	class:Polynomial
+res	lib/Polynomial.pm	/^    my $res;$/;"	v	file:	class:Polynomial
+res	lib/Polynomial.pm	/^    my $res;$/;"	v	file:	class:Polynomial
+res	lib/Polynomial.pm	/^    my @res;$/;"	v	file:	class:Polynomial
+res	lib/Polynomial.pm	/^    my @res;$/;"	v	file:	class:Polynomial
+res	lib/Polynomial.pm	/^    my @res;$/;"	v	file:	class:Polynomial
+res	refun.pl	/^        my $res = join $out_plus_s, @summands;$/;"	v	file:
+res	refun.pl	/^        my $res = join($in_plus_s, @summands);$/;"	v	file:
+res	refun.pl	/^    my $res = 1;$/;"	v	file:
+res	refun.pl	/^    my $res = collect(expand($s));$/;"	v	file:
+res	refun.pl	/^    my $res;$/;"	v	file:
+res	refun.pl	/^    my @res;$/;"	v	file:
+resummand	lib/Polynomial.pm	/^sub resummand {$/;"	s	class:Polynomial
+rf	lib/Polynomial.pm	/^        my $rf = factmod($r, $k);$/;"	v	file:	class:Polynomial
+run_tests	refun.pl	/^sub run_tests {$/;"	s	file:
+s	aop.pl	/^my $s;$/;"	v	file:
+s	lib/Polynomial.pm	/^    my ($s, $t, $k) = @args{qw(gen type k)};$/;"	v	file:	class:Polynomial
+s	refun.pl	/^        my $s = shift;$/;"	v	file:
+s	refun.pl	/^    my $s = shift;$/;"	v	file:
+s	refun.pl	/^    my $s = shift;$/;"	v	file:
+s	refun.pl	/^    my ($c, $s) = @_;$/;"	v	file:
+s	refun.pl	/^    my ($s, $d) = @_;$/;"	v	file:
+s	refun.pl	/^    my ($s, $d) = @_;$/;"	v	file:
+s	refun.pl	/^    my @s = map {@{[split($x_mul_r,$_)]}[0]}$/;"	v	file:
+self	lib/AOP.pm	/^    my $self = shift;$/;"	v	file:	class:AOP
+self	lib/AOP.pm	/^    my $self = shift;$/;"	v	file:	class:AOP
+self	lib/AOP.pm	/^    my $self = shift;$/;"	v	file:	class:AOP
+self	lib/AOP.pm	/^    my $self = shift;$/;"	v	file:	class:AOP
+self	lib/AOP.pm	/^    my $self = shift;$/;"	v	file:	class:AOP
+self	lib/AOP.pm	/^    my $self = shift;$/;"	v	file:	class:AOP
+self	lib/AOP.pm	/^    my $self = shift;$/;"	v	file:	class:AOP
+self	lib/AOP.pm	/^    my $self = shift;$/;"	v	file:	class:AOP
+self	lib/Polynomial.pm	/^    my $self = shift;$/;"	v	file:	class:Polynomial
+self	lib/Polynomial.pm	/^    my $self = shift;$/;"	v	file:	class:Polynomial
+self	lib/Polynomial.pm	/^    my $self = shift;$/;"	v	file:	class:Polynomial
+self	lib/Polynomial.pm	/^    my $self = shift;$/;"	v	file:	class:Polynomial
+self	lib/Polynomial.pm	/^    my $self = shift;$/;"	v	file:	class:Polynomial
+self	lib/Polynomial.pm	/^    my $self = shift;$/;"	v	file:	class:Polynomial
+self	lib/Polynomial.pm	/^    my $self = shift;$/;"	v	file:	class:Polynomial
+self	lib/Polynomial.pm	/^    my $self = shift;$/;"	v	file:	class:Polynomial
+self	lib/Polynomial.pm	/^    my $self = shift;$/;"	v	file:	class:Polynomial
+self	lib/Polynomial.pm	/^    my ($self, $c) = @_;$/;"	v	file:	class:Polynomial
+self	lib/Polynomial.pm	/^    my ($self, $c) = @_;$/;"	v	file:	class:Polynomial
+self	lib/Polynomial.pm	/^    my ($self, $c) = @_;$/;"	v	file:	class:Polynomial
+self	lib/Polynomial.pm	/^    my ($self, $d) = @_;$/;"	v	file:	class:Polynomial
+self	lib/Polynomial.pm	/^    my ($self, $other) = @_;$/;"	v	file:	class:Polynomial
+self	lib/Polynomial.pm	/^    my ($self, $other) = @_;$/;"	v	file:	class:Polynomial
+show_polynomial	lib/Polynomial.pm	/^sub show_polynomial {$/;"	s	class:Polynomial
+sort_powers	refun.pl	/^    sub sort_powers {$/;"	s	file:
+spolynomial	lib/Polynomial.pm	/^    my $spolynomial = $self->polynomial;$/;"	v	file:	class:Polynomial
+ss	refun.pl	/^            my $ss = $cs . $xs;$/;"	v	file:
+str	polynomial.pl	/^my $str;$/;"	v	file:
+str	spolynomial.pl	/^my $str = 'fx^4 + gx^3 + fx^2 + gx + f';$/;"	v	file:
+sum	lib/Polynomial.pm	/^    my $sum = 0;$/;"	v	file:	class:Polynomial
+sum	refun.pl	/^        my $sum = plus($fs, $fs);$/;"	v	file:
+sum0	refun.pl	/^        my $sum0 = plus($fs, $times0);$/;"	v	file:
+summand	lib/Polynomial.pm	/^            (?: (?<c>$number) \\*? )?? $summand $/;"	v	file:	class:Polynomial
+summand	lib/Polynomial.pm	/^    my $summand = qr\/(?: $funcst \\*? )? (?: $expst|$varst )\/x;$/;"	v	file:	class:Polynomial
+summands	refun.pl	/^        my @summands;$/;"	v	file:
+summands	refun.pl	/^        my @summands;$/;"	v	file:
+summands	refun.pl	/^    my @summands = split($out_plus_r, $s);$/;"	v	file:
+summands	refun.pl	/^    my @summands;$/;"	v	file:
+summandst	lib/Polynomial.pm	/^    my $summandst = qr{$/;"	v	file:	class:Polynomial
+summandst	lib/Polynomial.pm	/^    my $summandst = resummand();$/;"	v	file:	class:Polynomial
+t	aop.pl	/^my $t = Polynomial->new(k => $k, $/;"	v	file:
+t	lib/Polynomial.pm	/^    my ($s, $t, $k) = @args{qw(gen type k)};$/;"	v	file:	class:Polynomial
+t	polynomial.pl	/^my $t = Polynomial->new(k => $k, $/;"	v	file:
+t	refun.pl	/^            my $t = invert($gc) * $hc % $k + 1;$/;"	v	file:
+t	vpolynomial.pl	/^my $t = 0;$/;"	v	file:
+test	refun.pl	/^    my $test = 1;$/;"	v	file:
+test	refun.pl	/^my $test = 1; # run testing functions?$/;"	v	file:
+test_arithmetic_operations	refun.pl	/^sub test_arithmetic_operations {$/;"	s	file:
+test_complex	refun.pl	/^sub test_complex {$/;"	s	file:
+test_generate	refun.pl	/^sub test_generate {$/;"	s	file:
+test_in_out_identity	refun.pl	/^sub test_in_out_identity {$/;"	s	file:
+test_zero_polarization	refun.pl	/^sub test_zero_polarization {$/;"	s	file:
+times0	refun.pl	/^        my $times0 = const_multiply(0, $fs);$/;"	v	file:
+times1	refun.pl	/^        my $times1 = const_multiply(1, $fs);$/;"	v	file:
+times2	refun.pl	/^        my $times2 = const_multiply(2, $fs);$/;"	v	file:
+tmp	lib/Polynomial.pm	/^    my $tmp = $self->clone;$/;"	v	file:	class:Polynomial
+tmp	lib/Polynomial.pm	/^    my $tmp = dclone $self;$/;"	v	file:	class:Polynomial
+tmp	lib/Polynomial.pm	/^    my $tmp = dclone $self;$/;"	v	file:	class:Polynomial
+tmp	lib/Polynomial.pm	/^    my $tmp = dclone $self;$/;"	v	file:	class:Polynomial
+tmp1	refun.pl	/^        my ($tmp1, $ad) = split(\/\\^\/, $a);$/;"	v	file:
+tmp2	refun.pl	/^        my ($tmp2, $bd) = split(\/\\^\/, $b);$/;"	v	file:
+to_csv	lib/AOP.pm	/^sub to_csv {$/;"	s	class:AOP
+to_csv	lib/Polynomial.pm	/^sub to_csv {$/;"	s	class:Polynomial
+to_tex	lib/Polynomial.pm	/^sub to_tex {$/;"	s	class:Polynomial
+ts	aop.pl	/^my $ts = "t*x^$k_1 + -$c*h*x^$k_1 + $c*h*(x+$k_1)^$k_1";$/;"	v	file:
+un	lib/AOP.pm	/^        my ($un, $is);$/;"	v	file:	class:AOP
+union	lib/AOP.pm	/^    my (%union, %isect);$/;"	v	file:	class:AOP
+union	lib/Polynomial.pm	/^    my %union;$/;"	v	file:	class:Polynomial
+union_insect	lib/AOP.pm	/^sub union_insect {$/;"	s	class:AOP
+v	aop.pl	/^my $v;$/;"	v	file:
+v	vpolynomial.pl	/^my $v = 0;$/;"	v	file:
+var	lib/Polynomial.pm	/^            $var$/;"	v	file:	class:Polynomial
+var	lib/Polynomial.pm	/^            \\($var(?<d>$polar)\\)$/;"	v	file:	class:Polynomial
+var	lib/Polynomial.pm	/^            \\((?<d>$number)\\+$var\\)$/;"	v	file:	class:Polynomial
+var	lib/Polynomial.pm	/^    my $var = qr\/(?<x>x)\/;$/;"	v	file:	class:Polynomial
+varst	lib/Polynomial.pm	/^    my $varst = qr{$/;"	v	file:	class:Polynomial
+verbose_tests	refun.pl	/^    local $verbose_tests = 1;$/;"	v	file:
+verbose_tests	refun.pl	/^our $verbose_tests = 0; # notify about passed tests?$/;"	v	file:
+x	refun.pl	/^        my ($x, $d, $e) = @_;$/;"	v	file:
+x_mul_r	refun.pl	/^my $x_mul_r    = qr\/\\Q$x_mul_s\\E\/;$/;"	v	file:
+x_mul_s	refun.pl	/^my $x_mul_s    = q\/*\/;$/;"	v	file:
+x_pow	refun.pl	/^        my ($cf, $x_pow) = split($x_mul_r, $summand);$/;"	v	file:
+xs	refun.pl	/^                my ($cx, $xs);$/;"	v	file:
+xs	refun.pl	/^            my $xs = "x^$p";$/;"	v	file:
+zeros	lib/Polynomial.pm	/^sub zeros {$/;"	s	class:Polynomial

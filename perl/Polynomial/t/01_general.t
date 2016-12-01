@@ -1,12 +1,12 @@
 use strict;
 use warnings;
-use Polynomial qw(generate);
+use Polynomial;
 use Math::Prime::Util qw(binomial znprimroot is_primitive_root);
 use Data::Printer;
 use Test::More 'no_plan';
 
 use_ok('Polynomial', qw());
-can_ok('Polynomial', qw(new polarize mul clone len));
+can_ok('Polynomial', qw(new polarize clone len zeros));
 
 # NOTE Begin Vector
 Vector: do {
