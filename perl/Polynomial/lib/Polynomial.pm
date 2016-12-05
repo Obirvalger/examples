@@ -91,44 +91,6 @@ sub to_csv {
     $self->show(sep => ';');
 }
 
-sub fprint {
-    my $self = shift;
-    my $k = $self->k;
-
-    my %args = @_;
-
-    my $c_sub = sub {
-        $_ = $_[0];
-#        say;
-        my $f = $_[1] // 'f';
-        tr/()//d;
-        my @a = split /\s*\+\s*/;
-        if (@a > 2) {
-            # Do nothing
-            $_ = $_[0];
-        } elsif (@a == 1) {
-#            p $self->funcs;
-#            p $self->polynomial;
-            my $f0 = $self->funcs->[0];
-            s/$f0/f0/g;
-            my $f1 = $self->funcs->[1];
-            s/$f1/f1/g;
-        } else { # @a == 2
-            $a[0] =~ s/^(\d)*//;
-            my $c1 = $1 // 1;
-            $a[1] =~ s/^(\d)*//;
-            my $c2 = $1 // 1;
-#            say "$c1 $c2";
-            my $cf = "$f@{[invmod($c1, $k)*$c2 % $k + 1]}"; 
-            $cf = "$c1*$cf" if $c1 > 1;
-            $_ = $cf;
-        }
-
-        $_[0] = $_;
-    };
-
-    $self->show(c_sub => $c_sub, %args);
-}
 
 sub to_tex {
     my $self = shift;
@@ -363,6 +325,58 @@ sub resummand {
 }
 
 sub show {
+    my $self = shift;
+    my $k = $self->k;
+    my $res = '';
+
+    my %args =  @_;
+
+    if ($args{tex}) {
+        $args{mul} //= '';
+    } else {
+        $args{mul} = '*';
+    }
+
+    $args{one_function} //= $args{only_function};
+#        if defined $args{only_function};
+
+    my $c_sub = sub {
+        $_ = $_[0];
+
+        my $f = $args{one_function};
+        tr/()//d;
+        my @a = split /\s*\+\s*/;
+        if (@a > 2) {
+            # Do nothing
+            $_ = $_[0];
+        } elsif (@a == 1) {
+            my $f0 = $self->funcs->[0];
+            s/$f0/f0/g;
+            my $f1 = $self->funcs->[1];
+            s/$f1/f1/g;
+        } else { # @a == 2
+            $a[0] =~ s/^(\d)*//;
+            my $c1 = $1 // 1;
+            $a[1] =~ s/^(\d)*//;
+            my $c2 = $1 // 1;
+            my $cf = "$f@{[invmod($c1, $k)*$c2 % $k + 1]}"; 
+            $cf = "$c1$args{mul}$cf" if $c1 > 1;
+            $_ = $cf;
+        }
+
+        $_[0] = $_;
+    };
+
+    if ($args{one_function}) {
+        $res = $self->_show_polynomial(c_sub => $c_sub, %args);
+    } else {
+        $res = $self->_show_polynomial(%args);
+    }
+
+    return $res;
+}
+
+sub _show_polynomial {
     my $self = shift;
     my %args = (
         sep        => ' + ',

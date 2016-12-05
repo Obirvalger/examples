@@ -87,10 +87,11 @@ sub show {
         poly_show  => {},
         @_
     );
+#    p %args;
     my %pargs = %{$args{poly_show}};
     $args{around} = [$args{around}, $args{around}] unless ref($args{around});
-    $args{psep} = $args{sep};
-    $args{dsep} = $args{sep};
+    $args{psep} = $args{sep} if $args{sep};
+    $args{dsep} = $args{sep} if $args{sep};
     for my $s (@{$args{around}}) {
         chomp($s);
         $s .= "\n" if $s;
@@ -111,27 +112,51 @@ sub show {
 sub to_csv {
     my $self = shift;
     my $res = '';
-    for my $d (0..$self->k) {
-        $res .= join("\n", map {$_->to_csv} @{$self->polynomials->[$d]}) .
-            "\n\n";
-    }
+#    for my $d (0..$self->k) {
+#        $res .= join("\n", map {$_->to_csv} @{$self->polynomials->[$d]}) .
+#            "\n\n";
+#    }
+    
+    $self->show(dsep => "\n\n", psep => "\n", poly_show => {sep => ';', @_});
 
-    return $res;
+#    return $res;
 }
 
 sub to_tex_table {
     my $self = shift;
     my $k = $self->k;
     my $res = '';
-    $res .= "\\documentclass[a4paper, 12pt]{extarticle}\n\\begin{document}";
-    $res .= '\begin{table}' . "\n" . '\centering';
+#    $res .= "\\documentclass[a4paper, 12pt]{extarticle}\n\\begin{document}";
+#    $res .= '\begin{table}' . "\n" . '\centering';
     $res .= $self->show(
+        before => <<'EOF',
+\documentclass[a4paper, 12pt]{extarticle}
+\begin{document}
+\begin{table}
+\centering
+EOF
+        after => "\\end{table}\n\\end{document}\n",
         sep => "\\\\ \\hline  \n", 
         around => ['\begin{tabular}{|l' .'|l' x $k . '|} \hline',
                    '\end{tabular}'],
-        poly_show => {mul => '', tex => 1, sep => ' & ', around => '$'}
+        poly_show => {mul => '', tex => 1, sep => ' & ', around => '$', @_}
     );
-    $res .= '\end{table}';
+#    $res .= "\\end{table}\n";
+#    $res .= "\\end{document}\n";
+
+    return $res;
+}
+
+sub to_tex_array {
+    my $self = shift;
+    my $k = $self->k;
+    my $res = '';
+    $res .= "\\documentclass[a4paper, 12pt]{extarticle}\n\\begin{document}\n";
+    $res .= $self->show(
+        sep => "\\\\  \n", 
+        around => ['$$\begin{array}{l}','\end{array}$$'],
+        poly_show => {mul => '', tex => 1, @_}
+    );
     $res .= '\end{document}';
 
     return $res;
