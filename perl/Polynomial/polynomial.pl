@@ -32,12 +32,13 @@ my $t = Polynomial->new(k => $k,
     str => "t*x^$k_1 + -$c*h*x^$k_1 + $c*h*(x+$k_1)^$k_1");
 #say $str;
 
-my $f = Polynomial->new(k => $k, str => $str);
+#my $f = Polynomial->new(k => $k, str => $str);
 #my $g = Polynomial->new(k => $k, str => 'x^3 + x');
 #say $t->polarize(2);
-say $t->fprint;
+my $f = $t + 2*$h;
+say $f;
+say $f->fprint;
 #say $t->fprint(only_funcs=>1, del=>'');
-say $t;
 #say $t->init_str;
 #say $t;
 #say $t->polarize(2);

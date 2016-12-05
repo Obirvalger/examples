@@ -121,6 +121,20 @@ sub to_csv {
 
 sub to_tex_table {
     my $self = shift;
+    my $k = $self->k;
+    my $res = '';
+    $res .= "\\documentclass[a4paper, 12pt]{extarticle}\n\\begin{document}";
+    $res .= '\begin{table}' . "\n" . '\centering';
+    $res .= $self->show(
+        sep => "\\\\ \\hline  \n", 
+        around => ['\begin{tabular}{|l' .'|l' x $k . '|} \hline',
+                   '\end{tabular}'],
+        poly_show => {mul => '', tex => 1, sep => ' & ', around => '$'}
+    );
+    $res .= '\end{table}';
+    $res .= '\end{document}';
+
+    return $res;
 }
 
 sub fmap {

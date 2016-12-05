@@ -99,6 +99,7 @@ sub fprint {
 
     my $c_sub = sub {
         $_ = $_[0];
+#        say;
         my $f = $_[1] // 'f';
         tr/()//d;
         my @a = split /\s*\+\s*/;
@@ -119,7 +120,7 @@ sub fprint {
             my $c2 = $1 // 1;
 #            say "$c1 $c2";
             my $cf = "$f@{[invmod($c1, $k)*$c2 % $k + 1]}"; 
-            $cf = "$c1*$cf" if $c1 > 0;
+            $cf = "$c1*$cf" if $c1 > 1;
             $_ = $cf;
         }
 

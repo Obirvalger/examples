@@ -1,3 +1,11 @@
 #! /usr/bin/sh
 
-vim -p lib/AOP.pm aop.pl lib/Polynomial.pm polynomial.pl t/*
+VIM=''
+if [ -f /usr/bin/vimx ]
+then 
+    VIM=vimx
+else
+   VIM=vim 
+fi
+
+$VIM -p lib/AOP.pm aop.pl lib/Polynomial.pm polynomial.pl t/*
