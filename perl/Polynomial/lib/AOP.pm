@@ -74,17 +74,17 @@ sub fprint {
 sub show {
     my $self = shift;
     my %args = (
-        dsep       => "\n\n",
-        psep       => "\n",
-        tex        => 0,
-        before     => '',
-        after      => '',
-        noblank    => 0,
-        c_sub      => sub {$_[0]},
-        default    => '',
-        only_funcs => 0,
-        around     => ['', ''],
-        poly_show  => {},
+        dsep           => "\n\n",
+        psep           => "\n",
+        tex            => 0,
+        before         => '',
+        after          => '',
+        noblank        => 0,
+        c_sub          => sub {$_[0]},
+        default        => '',
+        only_functions => '',
+        around         => ['', ''],
+        poly_show      => {},
         @_
     );
 #    p %args;
@@ -96,17 +96,39 @@ sub show {
         chomp($s);
         $s .= "\n" if $s;
     }
+    
+    my $a;
+    if ($args{only_functions}) {
+        $a = $self->_show_types($args{only_functions});
+    } else {
+        $a = $self->polynomials;
+    }
 
     my $res = $args{before};
-    for my $d (0..$self->k) {
+    for my $i (0..$#$a) {
         $res .= $args{around}[0];
         $res .= join($args{psep},
-            map {$_->show(%pargs)} @{$self->polynomials->[$d]}) . $args{dsep};
+            map {$_->show(%pargs)} @{$a->[$i]}) . $args{dsep};
         $res .= $args{around}[1];
     }
     $res .= $args{after};
 
     return $res;
+}
+
+sub _show_types {
+    my $self = shift;
+    my $f = shift;
+    my $k = $self->k;
+    my $types;
+
+    for my $d (0..$k-1) {
+        while (my ($i, $p) = each @{$self->polynomials->[$d]}) {
+            push @{$types->[$i]}, $p->show(only_functions => $f, @_);
+        }
+    }
+
+    $types;
 }
 
 sub to_csv {
@@ -129,13 +151,8 @@ sub to_tex_table {
 #    $res .= "\\documentclass[a4paper, 12pt]{extarticle}\n\\begin{document}";
 #    $res .= '\begin{table}' . "\n" . '\centering';
     $res .= $self->show(
-        before => <<'EOF',
-\documentclass[a4paper, 12pt]{extarticle}
-\begin{document}
-\begin{table}
-\centering
-EOF
-        after => "\\end{table}\n\\end{document}\n",
+        before => _begin_tex() . "\\begin{table}\n\\centering",
+        after => '\end{table}' . _end_tex(),
         sep => "\\\\ \\hline  \n", 
         around => ['\begin{tabular}{|l' .'|l' x $k . '|} \hline',
                    '\end{tabular}'],
@@ -246,6 +263,16 @@ sub _build_polynomials {
 
 __PACKAGE__->meta->make_immutable;
 no Moose;
+
+sub _begin_tex {
+'\documentclass[a4paper, 12pt]{extarticle}
+\begin{document}
+'
+}
+
+sub _end_tex {
+    "\n\\end{document}\n";
+}
 
 sub union_insect {
     my (%union, %isect);

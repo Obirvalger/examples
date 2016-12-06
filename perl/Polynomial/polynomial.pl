@@ -37,8 +37,8 @@ my $t = Polynomial->new(k => $k,
 #say $t->polarize(2);
 my $f = $t + 2*$h;
 say $f;
-say $f->show(only_function => 'f', );
-say $f;
+say $f->show(one_function => 'f', );
+say $f->show(only_functions => 'f', tex => 1);
 #say $t->fprint(only_funcs=>1, del=>'');
 #say $t->init_str;
 #say $t;

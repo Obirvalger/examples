@@ -53,7 +53,8 @@ if ($v) {
     say $fh $av->to_csv;
 }
 
-say $as->to_csv(one_function => 'f');
+say $as->to_tex_table(only_functions => 'f');
+#$as->_show_types('f');
 #$as->fmap(sub {say $_[0]});
 #$as->fmap(sub {print $_[0]->fprint(del => '', only_funcs => 1)}, sub {print ';'});
 

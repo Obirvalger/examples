@@ -238,6 +238,142 @@ sub _build_polynomial {
     return $poly;
 }
 
+sub show {
+    my $self = shift;
+    my $k = $self->k;
+    my $res = '';
+
+    my %args =  @_;
+
+    if ($args{tex}) {
+        $args{mul} //= '';
+    } else {
+        $args{mul} = '*';
+    }
+
+    $args{sep} = '' if $args{only_functions};
+    $args{one_function} //= $args{only_functions};
+#        if defined $args{only_function};
+
+    my $c_sub = sub {
+        $_ = $_[0];
+
+        my $f = $args{one_function};
+        tr/()//d;
+        my @a = split /\s*\+\s*/;
+        if (@a > 2) {
+            # Do nothing
+            $_ = $_[0];
+        } elsif (@a == 1) {
+            my $f0 = $self->funcs->[0];
+            s/$f0/f0/g;
+            my $f1 = $self->funcs->[1];
+            s/$f1/f1/g;
+        } else { # @a == 2
+            $a[0] =~ s/^(\d)*//;
+            my $c1 = $1 // 1;
+            $a[1] =~ s/^(\d)*//;
+            my $c2 = $1 // 1;
+            my $cf = "$f@{[invmod($c1, $k)*$c2 % $k + 1]}"; 
+            $cf = "$c1$args{mul}$cf" if $c1 > 1;
+            $_ = $cf;
+        }
+
+        $_[0] = $_;
+    };
+
+    if ($args{one_function}) {
+        $res = $self->_show_polynomial(c_sub => $c_sub, %args);
+    } else {
+        $res = $self->_show_polynomial(%args);
+    }
+
+    return $res;
+}
+
+sub _show_polynomial {
+    my $self = shift;
+    my %args = (
+        sep            => ' + ',
+        tex            => 0,
+        before         => '',
+        mul            => '*',
+        after          => '',
+        noblank        => 0,
+        c_sub          => sub {$_[0]},
+        default        => '',
+        only_functions => 0,
+        around         => ['', ''],
+        @_
+    );
+
+    $args{around} = [$args{around}, $args{around}] unless ref($args{around});
+
+    my ($k, $d) = ($self->k, $self->d);
+    my @polynomial = @{$self->polynomial};
+    my @res;
+    my @funcs;
+
+    while (my ($i,$s) = each @polynomial) {
+        my @keys = sort grep {$s->{$_} > 0} keys %{$s};
+        my $coeff = $args{default};
+        my $blank = not @keys;
+
+        unless ($blank) {
+            $coeff = '';
+            my @coeffs;
+            for my $f (@keys) {
+                if ($f eq 'Int') {
+                    push @coeffs, $s->{$f};
+                } elsif ($s->{$f} == 1) {
+                    push @coeffs, $f;
+                } else {
+                    push @coeffs, "$s->{$f}$args{mul}$f";
+                }
+            }
+            
+            $coeff = join(' + ', @coeffs);
+            $coeff = "($coeff)" if @coeffs > 1;
+
+            $args{c_sub}->($coeff);
+            if ($args{tex}) {
+                $coeff =~ s/([a-w])(\d+)/$1_$2/g;
+            }
+
+            if ($args{only_functions} and (not $blank or not $args{noblank})) {
+#                say $coeff;
+                $coeff =~ s/^\d+\Q$args{mul}\E//;
+                $coeff = $args{around}[0] . $coeff . $args{around}[1]
+                    unless $blank;
+                unshift @res, $coeff;
+            }
+
+            $coeff = '' if $coeff eq '1' and $i > 0;
+            $coeff = $coeff . $args{mul} if $i > 0 and $coeff;
+
+            if ($i > 1) {
+                if ($d > 0) {
+                    $coeff .= "(x+$d)^$i";
+                } else {
+                    $coeff .= "x^$i";
+                }
+            } elsif ($i == 1) {
+                if ($d > 0) {
+                    $coeff .= "(x+$d)";
+                } else {
+                    $coeff .= "x";
+                }
+            }
+        }
+        
+        if ((not $blank or not $args{noblank}) and not $args{only_functions}) {
+          $coeff = $args{around}[0] . $coeff . $args{around}[1] unless $blank;
+          unshift @res, $coeff; 
+        }
+    }
+
+    $args{before} . join($args{sep}, @res) . $args{after};
+}
 __PACKAGE__->meta->make_immutable;
 #no Moose;
 #1;
@@ -324,137 +460,7 @@ sub resummand {
     return $summandst;
 }
 
-sub show {
-    my $self = shift;
-    my $k = $self->k;
-    my $res = '';
 
-    my %args =  @_;
-
-    if ($args{tex}) {
-        $args{mul} //= '';
-    } else {
-        $args{mul} = '*';
-    }
-
-    $args{one_function} //= $args{only_function};
-#        if defined $args{only_function};
-
-    my $c_sub = sub {
-        $_ = $_[0];
-
-        my $f = $args{one_function};
-        tr/()//d;
-        my @a = split /\s*\+\s*/;
-        if (@a > 2) {
-            # Do nothing
-            $_ = $_[0];
-        } elsif (@a == 1) {
-            my $f0 = $self->funcs->[0];
-            s/$f0/f0/g;
-            my $f1 = $self->funcs->[1];
-            s/$f1/f1/g;
-        } else { # @a == 2
-            $a[0] =~ s/^(\d)*//;
-            my $c1 = $1 // 1;
-            $a[1] =~ s/^(\d)*//;
-            my $c2 = $1 // 1;
-            my $cf = "$f@{[invmod($c1, $k)*$c2 % $k + 1]}"; 
-            $cf = "$c1$args{mul}$cf" if $c1 > 1;
-            $_ = $cf;
-        }
-
-        $_[0] = $_;
-    };
-
-    if ($args{one_function}) {
-        $res = $self->_show_polynomial(c_sub => $c_sub, %args);
-    } else {
-        $res = $self->_show_polynomial(%args);
-    }
-
-    return $res;
-}
-
-sub _show_polynomial {
-    my $self = shift;
-    my %args = (
-        sep        => ' + ',
-        tex        => 0,
-        before     => '',
-        mul        => '*',
-        after      => '',
-        noblank    => 0,
-        c_sub      => sub {$_[0]},
-        default    => '',
-        only_funcs => 0,
-        around     => ['', ''],
-        @_
-    );
-
-    $args{around} = [$args{around}, $args{around}] unless ref($args{around});
-
-    my ($k, $d) = ($self->k, $self->d);
-    my @polynomial = @{$self->polynomial};
-    my @res;
-    my @funcs;
-
-    while (my ($i,$s) = each @polynomial) {
-        my @keys = sort grep {$s->{$_} > 0} keys %{$s};
-        my $coeff = $args{default};
-        my $blank = not @keys;
-
-        unless ($blank) {
-            $coeff = '';
-            my @coeffs;
-            for my $f (@keys) {
-                if ($f eq 'Int') {
-                    push @coeffs, $s->{$f};
-                } elsif ($s->{$f} == 1) {
-                    push @coeffs, $f;
-                } else {
-                    push @coeffs, "$s->{$f}$args{mul}$f";
-                }
-            }
-            
-            $coeff = join(' + ', @coeffs);
-            $coeff = "($coeff)" if @coeffs > 1;
-
-            $args{c_sub}->($coeff);
-            if ($args{tex}) {
-                $coeff =~ s/([a-w])(\d+)/$1_$2/g;
-            }
-            if ($args{only_funcs}) {
-                $coeff =~ s/^\d+\*//;
-                unshift @res, $coeff;
-            }
-
-            $coeff = '' if $coeff eq '1' and $i > 0;
-            $coeff = $coeff . $args{mul} if $i > 0 and $coeff;
-
-            if ($i > 1) {
-                if ($d > 0) {
-                    $coeff .= "(x+$d)^$i";
-                } else {
-                    $coeff .= "x^$i";
-                }
-            } elsif ($i == 1) {
-                if ($d > 0) {
-                    $coeff .= "(x+$d)";
-                } else {
-                    $coeff .= "x";
-                }
-            }
-        }
-        
-        if ((not $blank or not $args{noblank}) and not $args{only_funcs}) {
-          $coeff = $args{around}[0] . $coeff . $args{around}[1] unless $blank;
-          unshift @res, $coeff; 
-        }
-    }
-
-    $args{before} . join($args{sep}, @res) . $args{after};
-}
 
 sub prime_root {
     my $k = shift;
