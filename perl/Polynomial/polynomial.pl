@@ -36,9 +36,16 @@ my $t = Polynomial->new(k => $k,
 #my $g = Polynomial->new(k => $k, str => 'x^3 + x');
 #say $t->polarize(2);
 my $f = $t + 2*$h;
-say $f;
-say $f->show(one_function => 'f', );
-say $f->show(only_functions => 'f', tex => 1);
+for my $d (0..$k-1) {
+    say $h->polarize($d)->to_csv;
+}
+say '';
+for my $d (0..$k-1) {
+    say $t->polarize($d)->to_csv;
+}
+#say $f;
+#say $f->show(one_function => 'f', );
+#say $f->show(only_functions => 'f', tex => 1);
 #say $t->fprint(only_funcs=>1, del=>'');
 #say $t->init_str;
 #say $t;

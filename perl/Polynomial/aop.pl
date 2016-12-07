@@ -53,12 +53,14 @@ if ($v) {
     say $fh $av->to_csv;
 }
 
-say $as->to_tex_table(only_functions => 'f');
+#say $as->to_tex_table(only_functions => 'f');
+#say $as->to_tex_table;
 #$as->_show_types('f');
 #$as->fmap(sub {say $_[0]});
 #$as->fmap(sub {print $_[0]->fprint(del => '', only_funcs => 1)}, sub {print ';'});
 
-#say $as->min_len(1) == $k ? "Ok all" : "Not ok all";
+say $as->to_csv;
+warn $as->min_len(1) == $k ? "Ok all" : "Not ok all";
 #say $av->is_any_group_complex(1) ? "Ok group" : "Not ok group";
 
 #say "\\documentclass[a4paper, 12pt]{extarticle}\n\\begin{document}";
