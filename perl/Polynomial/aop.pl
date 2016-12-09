@@ -39,7 +39,8 @@ my $h = Polynomial->new(k => $k,
 my $t = Polynomial->new(k => $k, 
     str => "t*x^$k_1 + -$c*h*x^$k_1 + $c*h*(x+$k_1)^$k_1");
 
-my $av = AOP->new(k => $k, gens => ["$e*x^$k_1 + (x+1)^$k_1","$e*(x+1)^$k_1 + (x+2)^$k_1"]);
+my $av = AOP->new(k => $k,
+    gens => ["$e*x^$k_1 + (x+1)^$k_1","$e*(x+1)^$k_1 + (x+2)^$k_1"]);
 
 my $as = AOP->new(k => $k, gens => [$hs, $ts]);
 
