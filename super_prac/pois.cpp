@@ -453,7 +453,7 @@ double compute_norm(GridParameters gp, double *p, double *p_prev) {
 	    	for (j=0; j<gp.get_num_y_points(); j++) {
 	    		int grid_i, grid_j;
 	    		gp.get_real_grid_index(i, j, grid_i, grid_j);
-	    		norm = max(norm, abs(p[i*gp.get_num_y_points()+j] - p_prev[i*gp.get_num_y_points()+j]));
+	    		norm = max(norm, 1.0*abs(p[i*gp.get_num_y_points()+j] - p_prev[i*gp.get_num_y_points()+j]));
 	    	}
 		}
 		#pragma omp critical 
@@ -514,7 +514,7 @@ void write_func_to_file(GridParameters gp, double *func, string func_name) {
 
 void write_two_func_to_file(GridParameters gp, double *func1, string func1_name, double *func2, string func2_name) {
 	string name = "output/" + func1_name + "_" + from_int(gp.rank) + ".txt"; 
-    cout << name << endl;
+    //cout << name << endl;
 	fstream fout (name.c_str(), fstream::out);
 
 	fout << "x,y," << func1_name << "," << func2_name << endl;
@@ -540,6 +540,7 @@ int main (int argc, char** argv) {
 
 	const int N1 = atoi(argv[1]);
 	const int N2 = atoi(argv[2]);
+
 	const double eps = 0.0001;
 
 	double* x_grid = new double [N1+1];
@@ -552,25 +553,26 @@ int main (int argc, char** argv) {
 		y_grid[j] = B2 * 1.0*j/N2 + B1 * (1 - 1.0*j/N2);
 	}
 
-	int rank, size;
+	int rank, nproc;
 	int p1, p2;
 	int x_index_from, x_index_to, y_index_from, y_index_to;
 
 	MPI_Init (&argc, &argv);	/* starts MPI */
 	MPI_Comm_rank (MPI_COMM_WORLD, &rank);	/* get current process id */
-	MPI_Comm_size (MPI_COMM_WORLD, &size);	/* get number of processes */
+	MPI_Comm_size (MPI_COMM_WORLD, &nproc);	/* get number of processes */
 
-	compute_grid_processes_number(size, p1, p2);
+	compute_grid_processes_number(nproc, p1, p2);
 
 	// filter extra processes
 	if (rank < p1 * p2) {
 		if (rank == 0) {
+            printf("size = %d x %d\n", N1, N2);
 	       	#ifdef _OPENMP
-	        cout << "OpenMP Max-threads = " << omp_get_max_threads() << endl;
+	        printf("Threads = %d\n", omp_get_max_threads());
 	        #endif
-			cout << "p1=" << p1 << " p2=" << p2 << " size=" << size << endl;
+			printf("p1 = %d p2 = %d nproc = %d\n", p1, p2, nproc);
 	    }
-		//printf( "Hello world from process %d of %d\n", rank, size );
+		//printf( "Hello world from process %d of %d\n", rank, nproc );
 	    //printf("rank %d: x_index_from = %d  x_index_to = %d  y_index_from = %d y_index_to = %d  top=%d bottom=%d left=%d right=%d\n", 
 	    // 	rank, x_index_from, x_index_to, y_index_from, y_index_to, );
 
@@ -651,7 +653,7 @@ int main (int argc, char** argv) {
             swap(p, p_prev);
 	    	n_iter += 1;
 	    }
-	    write_two_func_to_file(gp, p, "p", phi_on_grid, "phi_on_grid");
+	    //write_two_func_to_file(gp, p, "p", phi_on_grid, "phi_on_grid");
     	//write_func_to_file(gp, p, "p");
     	//write_func_to_file(gp, phi_on_grid, "phi_on_grid");
 	}
