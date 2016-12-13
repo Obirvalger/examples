@@ -142,9 +142,9 @@ struct GridParameters {
 			return y_index_to - y_index_from;
 	}
 
-	int get_real_grid_index(int i, int j, int& grid_i, int& grid_j) {
-		grid_i = x_index_from+i;
-		grid_j = y_index_from+j;
+	void get_real_grid_index(int i, int j, int& grid_i, int& grid_j) {
+		grid_i = x_index_from + i;
+		grid_j = y_index_from + j;
 	}
 
 	double get_x_grid_value(int grid_i) {
