@@ -23,16 +23,13 @@ using std::stringstream;
 
 //using namespace std;
 
-string from_int(int number) {
+string int_to_str(int number) {
 	stringstream ss;
 	ss << number;
 	return ss.str();
 }
 
 double F(const double x, const double y) {
-    double t = 1.0 + 1.0*x*y;
-    if (t == 0)
-    	throw runtime_error("Error in computing 'F' function");
     return 4*(2 - 3*x*x - 3*y*y);
 }
 
@@ -49,35 +46,35 @@ double f_grid(const double t) {
 }
 */
 
-void compute_grid_processes_number(const int& size, int& x_proc_num, int& y_proc_num) {
-    if (size >= 512) {
+void compute_grid_processes_number(const int& nproc, int& x_proc_num, int& y_proc_num) {
+    if (nproc >= 512) {
         x_proc_num = 16;
         y_proc_num = 32;
-    } else if (size >= 256) {
+    } else if (nproc >= 256) {
         x_proc_num = 16;
         y_proc_num = 16;
-    } else if (size >= 128) {
+    } else if (nproc >= 128) {
         x_proc_num = 8;
         y_proc_num = 16;
-    } else if (size >= 64) {
+    } else if (nproc >= 64) {
         x_proc_num = 8;
         y_proc_num = 8;
-    } else if (size >= 32) {
+    } else if (nproc >= 32) {
         x_proc_num = 4;
         y_proc_num = 8;
-    } else if (size >= 16) {
+    } else if (nproc >= 16) {
         x_proc_num = 4;
         y_proc_num = 4;
-    } else if (size >= 8){
+    } else if (nproc >= 8){
         x_proc_num = 2;
         y_proc_num = 4;
-    } else if (size >= 4) {
+    } else if (nproc >= 4) {
         x_proc_num = 2;
         y_proc_num = 2;
-    } else if (size >= 2) {
+    } else if (nproc >= 2) {
         x_proc_num = 1;
         y_proc_num = 2;
-    } else if (size >= 1) {
+    } else if (nproc >= 1) {
         x_proc_num = 1;
         y_proc_num = 1;
     } else {
@@ -453,7 +450,8 @@ double compute_norm(GridParameters gp, double *p, double *p_prev) {
 	    	for (j=0; j<gp.get_num_y_points(); j++) {
 	    		int grid_i, grid_j;
 	    		gp.get_real_grid_index(i, j, grid_i, grid_j);
-	    		norm = max(norm, 1.0*abs(p[i*gp.get_num_y_points()+j] - p_prev[i*gp.get_num_y_points()+j]));
+	    		norm = max(norm, 1.0*abs(p[i*gp.get_num_y_points()+j] -       \
+                            p_prev[i*gp.get_num_y_points()+j]));
 	    	}
 		}
 		#pragma omp critical 
@@ -501,7 +499,7 @@ void init_p_prev(GridParameters gp, double* p_prev) {
 }
 
 void write_func_to_file(GridParameters gp, double *func, string func_name) {
-	string name= "output/"+func_name + "_" + from_int(gp.rank) + ".txt"; 
+	string name= "output/"+func_name + "_" + int_to_str(gp.rank) + ".txt"; 
 	fstream fout (name.c_str(), fstream::out);
 	for (int i=0; i<gp.get_num_x_points(); i++) {
     	for (int j=0; j<gp.get_num_y_points(); j++) {
@@ -513,7 +511,7 @@ void write_func_to_file(GridParameters gp, double *func, string func_name) {
 }
 
 void write_two_func_to_file(GridParameters gp, double *func1, string func1_name, double *func2, string func2_name) {
-	string name = "output/" + func1_name + "_" + from_int(gp.rank) + ".txt"; 
+	string name = "output/" + func1_name + "_" + int_to_str(gp.rank) + ".txt"; 
     //cout << name << endl;
 	fstream fout (name.c_str(), fstream::out);
 
@@ -531,7 +529,7 @@ void write_two_func_to_file(GridParameters gp, double *func1, string func1_name,
 int main (int argc, char** argv) {
 	if (argc != 3)
 		throw runtime_error("Incorrect number of arguments");
-	clock_t begin = clock();
+	clock_t start_time = clock();
 
 	const double A1 = 0.0;
 	const double A2 = 1.0;
@@ -660,8 +658,8 @@ int main (int argc, char** argv) {
 	MPI_Finalize();
 
 	if (rank == 0) {
-		clock_t end = clock();
-	  	double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+		clock_t end_time = clock();
+	  	double elapsed_secs = double(end_time - start_time) / CLOCKS_PER_SEC;
 	  	printf("Algorithm finished! Elapsed time: %f sec\n", elapsed_secs);
 	}
 	return 0;

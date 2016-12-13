@@ -1,0 +1,68 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+F	pois.cpp	/^double F(const double x, const double y) {$/;"	f
+GridParameters	pois.cpp	/^	GridParameters (int rank, MPI_Comm comm, double* x_grid, double* y_grid, int N1, int N2, int p1, int p2, double eps):$/;"	f	struct:GridParameters
+GridParameters	pois.cpp	/^struct GridParameters {$/;"	s	file:
+MPI_tags	pois.cpp	/^enum MPI_tags { SendToTop, SendToBottom, SendToLeft, SendToRight};$/;"	g	file:
+N1	pois.cpp	/^	int rank, N1, N2, p1, p2, x_index_from, x_index_to, y_index_from, y_index_to;$/;"	m	struct:GridParameters	file:
+N2	pois.cpp	/^	int rank, N1, N2, p1, p2, x_index_from, x_index_to, y_index_from, y_index_to;$/;"	m	struct:GridParameters	file:
+SendToBottom	pois.cpp	/^enum MPI_tags { SendToTop, SendToBottom, SendToLeft, SendToRight};$/;"	e	enum:MPI_tags	file:
+SendToLeft	pois.cpp	/^enum MPI_tags { SendToTop, SendToBottom, SendToLeft, SendToRight};$/;"	e	enum:MPI_tags	file:
+SendToRight	pois.cpp	/^enum MPI_tags { SendToTop, SendToBottom, SendToLeft, SendToRight};$/;"	e	enum:MPI_tags	file:
+SendToTop	pois.cpp	/^enum MPI_tags { SendToTop, SendToBottom, SendToLeft, SendToRight};$/;"	e	enum:MPI_tags	file:
+bottom	pois.cpp	/^    bool top, bottom, left, right;$/;"	m	struct:GridParameters	file:
+comm	pois.cpp	/^    MPI_Comm comm;$/;"	m	struct:GridParameters	file:
+compute_approx_delta	pois.cpp	/^void compute_approx_delta(GridParameters gp, double* delta_func, const double* func) {$/;"	f
+compute_delta	pois.cpp	/^void compute_delta(GridParameters gp, const double *func, double *delta_func, double f_top, double f_bottom, double f_left, double f_right, int i, int j, int grid_i, int grid_j) {$/;"	f
+compute_g	pois.cpp	/^void compute_g(GridParameters gp, double *g, double *r, double alpha) {$/;"	f
+compute_grid_processes_number	pois.cpp	/^void compute_grid_processes_number(const int& nproc, int& x_proc_num, int& y_proc_num) {$/;"	f
+compute_norm	pois.cpp	/^double compute_norm(GridParameters gp, double *p, double *p_prev) {$/;"	f
+compute_p	pois.cpp	/^void compute_p(GridParameters gp, double *p, double* p_prev, double *g, double tau) {$/;"	f
+compute_r	pois.cpp	/^void compute_r(GridParameters gp, double *r, const double *delta_p) {$/;"	f
+eps	pois.cpp	/^	double eps;$/;"	m	struct:GridParameters	file:
+from_int	pois.cpp	/^string from_int(int number) {$/;"	f
+get_bottom_rank	pois.cpp	/^	int get_bottom_rank() {$/;"	f	struct:GridParameters
+get_left_rank	pois.cpp	/^	int get_left_rank() {$/;"	f	struct:GridParameters
+get_num_x_points	pois.cpp	/^	int get_num_x_points() {$/;"	f	struct:GridParameters
+get_num_y_points	pois.cpp	/^	int get_num_y_points() {$/;"	f	struct:GridParameters
+get_real_grid_index	pois.cpp	/^	int get_real_grid_index(int i, int j, int& grid_i, int& grid_j) {$/;"	f	struct:GridParameters
+get_right_rank	pois.cpp	/^	int get_right_rank() {$/;"	f	struct:GridParameters
+get_top_rank	pois.cpp	/^	int get_top_rank() {$/;"	f	struct:GridParameters
+get_x_grid_value	pois.cpp	/^	double get_x_grid_value(int grid_i) {$/;"	f	struct:GridParameters
+get_x_h_step	pois.cpp	/^	double get_x_h_step(int grid_i) {$/;"	f	struct:GridParameters
+get_y_grid_value	pois.cpp	/^	double get_y_grid_value(int grid_j) {$/;"	f	struct:GridParameters
+get_y_h_step	pois.cpp	/^	double get_y_h_step(int grid_j) {$/;"	f	struct:GridParameters
+init_p_prev	pois.cpp	/^void init_p_prev(GridParameters gp, double* p_prev) {$/;"	f
+init_vector	pois.cpp	/^void init_vector(GridParameters gp, double* func) {$/;"	f
+is_border_point	pois.cpp	/^	bool is_border_point(int grid_i, int grid_j) {$/;"	f	struct:GridParameters
+left	pois.cpp	/^    bool top, bottom, left, right;$/;"	m	struct:GridParameters	file:
+main	pois.cpp	/^int main (int argc, char** argv) {$/;"	f
+p1	pois.cpp	/^	int rank, N1, N2, p1, p2, x_index_from, x_index_to, y_index_from, y_index_to;$/;"	m	struct:GridParameters	file:
+p2	pois.cpp	/^	int rank, N1, N2, p1, p2, x_index_from, x_index_to, y_index_from, y_index_to;$/;"	m	struct:GridParameters	file:
+phi	pois.cpp	/^double phi(const double x, const double y) {$/;"	f
+rank	pois.cpp	/^	int rank, N1, N2, p1, p2, x_index_from, x_index_to, y_index_from, y_index_to;$/;"	m	struct:GridParameters	file:
+recv_message_bottom	pois.cpp	/^    double *recv_message_top, *recv_message_bottom, *recv_message_left, *recv_message_right;$/;"	m	struct:GridParameters	file:
+recv_message_left	pois.cpp	/^    double *recv_message_top, *recv_message_bottom, *recv_message_left, *recv_message_right;$/;"	m	struct:GridParameters	file:
+recv_message_right	pois.cpp	/^    double *recv_message_top, *recv_message_bottom, *recv_message_left, *recv_message_right;$/;"	m	struct:GridParameters	file:
+recv_message_top	pois.cpp	/^    double *recv_message_top, *recv_message_bottom, *recv_message_left, *recv_message_right;$/;"	m	struct:GridParameters	file:
+recv_requests	pois.cpp	/^    MPI_Request* recv_requests;$/;"	m	struct:GridParameters	file:
+right	pois.cpp	/^    bool top, bottom, left, right;$/;"	m	struct:GridParameters	file:
+scalar_product	pois.cpp	/^double scalar_product(GridParameters gp, const double* f1, const double* f2) {$/;"	f
+send_message_bottom	pois.cpp	/^    double *send_message_top, *send_message_bottom, *send_message_left, *send_message_right;$/;"	m	struct:GridParameters	file:
+send_message_left	pois.cpp	/^    double *send_message_top, *send_message_bottom, *send_message_left, *send_message_right;$/;"	m	struct:GridParameters	file:
+send_message_right	pois.cpp	/^    double *send_message_top, *send_message_bottom, *send_message_left, *send_message_right;$/;"	m	struct:GridParameters	file:
+send_message_top	pois.cpp	/^    double *send_message_top, *send_message_bottom, *send_message_left, *send_message_right;$/;"	m	struct:GridParameters	file:
+send_requests	pois.cpp	/^    MPI_Request* send_requests;$/;"	m	struct:GridParameters	file:
+top	pois.cpp	/^    bool top, bottom, left, right;$/;"	m	struct:GridParameters	file:
+write_func_to_file	pois.cpp	/^void write_func_to_file(GridParameters gp, double *func, string func_name) {$/;"	f
+write_two_func_to_file	pois.cpp	/^void write_two_func_to_file(GridParameters gp, double *func1, string func1_name, double *func2, string func2_name) {$/;"	f
+x_grid	pois.cpp	/^	double *x_grid, *y_grid;$/;"	m	struct:GridParameters	file:
+x_index_from	pois.cpp	/^	int rank, N1, N2, p1, p2, x_index_from, x_index_to, y_index_from, y_index_to;$/;"	m	struct:GridParameters	file:
+x_index_to	pois.cpp	/^	int rank, N1, N2, p1, p2, x_index_from, x_index_to, y_index_from, y_index_to;$/;"	m	struct:GridParameters	file:
+y_grid	pois.cpp	/^	double *x_grid, *y_grid;$/;"	m	struct:GridParameters	file:
+y_index_from	pois.cpp	/^	int rank, N1, N2, p1, p2, x_index_from, x_index_to, y_index_from, y_index_to;$/;"	m	struct:GridParameters	file:
+y_index_to	pois.cpp	/^	int rank, N1, N2, p1, p2, x_index_from, x_index_to, y_index_from, y_index_to;$/;"	m	struct:GridParameters	file:

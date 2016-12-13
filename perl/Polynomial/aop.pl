@@ -39,17 +39,14 @@ my $h = Polynomial->new(k => $k,
 my $t = Polynomial->new(k => $k, 
     str => "t*x^$k_1 + -$c*h*x^$k_1 + $c*h*(x+$k_1)^$k_1");
 
-<<<<<<< HEAD
-my $av = AOP->new(k => $k,
-    gens => ["$e*x^$k_1 + (x+1)^$k_1","$e*(x+1)^$k_1 + (x+2)^$k_1"]);
-=======
+#my $av = AOP->new(k => $k,
+    #gens => ["$e*x^$k_1 + (x+1)^$k_1","$e*(x+1)^$k_1 + (x+2)^$k_1"]);
 my $av = AOP->new(
     k => $k, 
     gens => ["$e*x^$k_1 + (x+1)^$k_1","x^$k_1 + $e*(x+1)^$k_1"]
 );
 
-say "@{$av->gens}";
->>>>>>> e5ce3c978671cc1616962fbfca888a08cb5bc0d4
+#say join("\n", @{$av->gens});
 
 my $as = AOP->new(k => $k, gens => [$hs, $ts]);
 
@@ -63,28 +60,11 @@ if ($v) {
     say $fh $av->to_csv;
 }
 
+say $av->to_csv;
 #say $as->to_tex_table(only_functions => 'f');
 #say $as->to_tex_table;
-#$as->_show_types('f');
-#$as->fmap(sub {say $_[0]});
-#$as->fmap(sub {print $_[0]->fprint(del => '', only_funcs => 1)}, sub {print ';'});
 
 #say $as->to_csv;
 #warn $as->min_len(1) == $k ? "Ok all" : "Not ok all";
-say $av->is_any_group_complex(0) ? "Ok group" : "Not ok group";
+#say $av->is_any_group_complex(0) ? "Ok group" : "Not ok group";
 
-#say "\\documentclass[a4paper, 12pt]{extarticle}\n\\begin{document}";
-
-#say $as->show(
-#    sep => "\\\\ \n", 
-#    around => ['$$\begin{array}{l}','\end{array}$$'],
-#    poly_show => {mul => '', tex => 1}
-#);
-
-#say '\end{document}';
-#$h->polynomial;
-#say $h->funcs;
-#say $as->polynomials->[0][0];
-#say $as->polynomials->[0][0]->funcs;
-#say $as->polynomials->[0][0]->fprint;
-#say $as->polynomials->[0][1];
