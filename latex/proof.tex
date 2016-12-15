@@ -1,0 +1,93 @@
+\documentclass [12pt, a4paper] {article}
+\usepackage[utf8x]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage[T2A]{fontenc}
+\usepackage{hyperref}
+\usepackage{mathtools, amsthm}
+\usepackage {graphicx}
+%\let\stdsection\section
+%\renewcommand\section{\newpage\stdsection}
+\addto\captionsrussian{% Replace "english" with the language you use
+  \renewcommand{\contentsname}%
+    {Оглавление}%
+}
+\hypersetup{
+    colorlinks,
+    allcolors=blue
+}
+\newtheorem{myth}{Теорема}
+
+\begin {document}
+
+\section{Теорема}
+Рассмотрим функции
+\[ \begin{array}{l}
+    h = hx^{k-1} + tx^{k-2} + \dots + tx + t \\
+    t = tx^{k-1} + ehx^{k-2} + \dots + ehx + eh \text{, где}
+\end{array} \]
+$e$ -- некоторый коэффициент.
+
+Через $C^{hd}_{hi}$ обозначим коэффициент у функции $h$ при $i$ слагаемом, при 
+функции $h$, поляризация $d$.
+
+Через $C^{hd}_{ti}$ обозначим коэффициент у функции $h$ при $i$ слагаемом, при 
+функции $t$, поляризация $d$.
+
+Через $C^{td}_{hi}$ обозначим коэффициент у функции $t$ при $i$ слагаемом, при 
+функции $h$, поляризация $d$.
+
+Через $C^{td}_{ti}$ обозначим коэффициент у функции $t$ при $i$ слагаемом, при 
+функции $t$, поляризация $d$.
+
+\[ C^{hd}_{hi} = \binom{k-1}{i}(-d)^{k-1-i} \]
+\[ C^{hd}_{ti} = \sum_{j=i}^{k-2} \binom{j}{i}(-d)^{j-i} \]
+\[ C^{td}_{hi} = \sum_{j=i}^{k-2} e \binom{j}{i}(-d)^{j-i} \]
+\[ C^{td}_{ti} = \binom{k-1}{i}(-d)^{k-1-i} \]
+
+Заметим, что $\binom{k-1}{i} \neq 0 \pmod k$, тогда у функции $h$ при любой
+поляризации присутствует слагаемое с $h$, а у функции $t$ при любой поляризации
+присутствует слагаемое с $t$.
+
+Пусть $f_a = h + at$, где $a \in [1 .. k-1]$.
+
+\begin{myth}
+    Для любых $d$ и $a$ у полинома функции $f^{(d)}_a$ $k$ слагаемых, если $e$
+    -- квадратичный невычет по модулю $k$.
+\end{myth}
+\begin{proof}
+    Пусть существуют $a, d, i$ такие, что $f^{(d)}_a[i] = 0$, тогда
+    $C^{hd}_{hi}$ должно быть равно $-a C^{td}_{hi}$, а $C^{hd}_{ti}$ должно
+    быть равно $-a C^{td}_{ti}$.
+    \begin{equation*}
+        \begin{cases}
+            \binom{k-1}{i}(-d)^{k-1-i} & = \; 
+                -a \sum\limits_{j=i}^{k-2} e \binom{j}{i} (-d)^{j-i} \\
+            \sum\limits_{j=i}^{k-2} \binom{j}{i} (-d)^{j-i} & = \;
+                -a \binom{k-1}{i}(-d)^{k-1-i} 
+        \end{cases}
+    \end{equation*} 
+    $\sum\limits_{j=i}^{k-2} \binom{j}{i} (-d)^{j-i} \neq 0$ так как
+    $\binom{k-1}{i}(-d)^{k-1-i} \neq 0$.
+    Следовательно 
+    \[
+        a^{-1} \sum_{j=i}^{k-2} \binom{j}{i} (-d)^{j-i} =
+            a \sum_{j=i}^{k-2} e \binom{j}{i} (-d)^{j-i}
+    \]
+
+    Значит $e = (a^{-1})^2$, что противоречит с тем, что $e$ -- квадратичный
+    невычет по модулю $k$.
+\end{proof}
+
+\section{Гипотеза}
+Также были рассмотрены следующие функции $h$ и $t$ одной переменной:
+\[
+    \begin{array}{l}
+        h = ex^{k-1} + (x+1)^{k-1} \\
+        t = x^{k-1} + e(x+1)^{k-1}
+    \end{array}
+\]
+
+Возможно, доказать для этих функций будет проще, но пока мне не удалость это
+сделать. Зато было получено, что эти функции задают сложные системы для всех
+простых $k$ от 5 до 79, если $e \in [2 .. k-2]$. 
+\end {document}

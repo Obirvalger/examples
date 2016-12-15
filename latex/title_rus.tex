@@ -3,6 +3,16 @@
 \usepackage[english,russian]{babel}
 \usepackage[T2A]{fontenc}
 \usepackage {graphicx}
+\let\stdsection\section
+\renewcommand\section{\newpage\stdsection}
+\addto\captionsrussian{% Replace "english" with the language you use
+  \renewcommand{\contentsname}%
+    {Оглавление}%
+}
+\hypersetup{
+    colorlinks,
+    allcolors=blue
+}
 
 \begin {document}
 

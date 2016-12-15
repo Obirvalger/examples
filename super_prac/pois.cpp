@@ -512,7 +512,7 @@ void write_func_to_file(GridParameters gp, double *func, string func_name) {
 
 void write_two_func_to_file(GridParameters gp, double *func1, string func1_name, double *func2, string func2_name) {
 	string name = "output/" + func1_name + "_" + int_to_str(gp.rank) + ".txt"; 
-    //cout << name << endl;
+    // cout << name << endl;
 	fstream fout (name.c_str(), fstream::out);
 
 	fout << "x,y," << func1_name << "," << func2_name << endl;
@@ -651,7 +651,7 @@ int main (int argc, char** argv) {
             swap(p, p_prev);
 	    	n_iter += 1;
 	    }
-	    //write_two_func_to_file(gp, p, "p", phi_on_grid, "phi_on_grid");
+	    write_two_func_to_file(gp, p, "p", phi_on_grid, "phi_on_grid");
     	//write_func_to_file(gp, p, "p");
     	//write_func_to_file(gp, phi_on_grid, "phi_on_grid");
 	}
