@@ -473,8 +473,8 @@ void init_vector(GridParameters gp, double* func) {
 	#pragma omp parallel for 
 	for (i=0; i<gp.get_num_x_points(); i++) {
     	for (j=0; j<gp.get_num_y_points(); j++) {
-    		int grid_i, grid_j;
-    		gp.get_real_grid_index(i, j, grid_i, grid_j);
+            //int grid_i, grid_j;
+            //gp.get_real_grid_index(i, j, grid_i, grid_j);
     		func[i*gp.get_num_y_points()+j] = 0.0;
 		}
 	}
@@ -541,6 +541,8 @@ int main (int argc, char** argv) {
 
 	const double eps = 0.0001;
 
+    double final_inaccuracy = 0.0;
+
 	double* x_grid = new double [N1+1];
 	double* y_grid = new double [N2+1];
 
@@ -606,8 +608,7 @@ int main (int argc, char** argv) {
 	    		int grid_i, grid_j;
 	    		gp.get_real_grid_index(i, j, grid_i, grid_j);
 	    		phi_on_grid[i*gp.get_num_y_points()+j] =                      \
-                    phi(gp.get_x_grid_value(grid_i),                          \
-                    gp.get_y_grid_value(grid_j));
+                    phi(gp.get_x_grid_value(grid_i), gp.get_y_grid_value(grid_j));
 	    	}
 		}
 
@@ -619,8 +620,7 @@ int main (int argc, char** argv) {
 	    	if (n_iter > 1) {
 	    		compute_approx_delta(gp, delta_r, r);
 	    		scalar_product_delta_r_and_g = scalar_product(gp, delta_r, g);
-	    		alpha = 1.0 * scalar_product_delta_r_and_g /                  \
-                    scalar_product_delta_g_and_g;
+	    		alpha = 1.0 * scalar_product_delta_r_and_g / scalar_product_delta_g_and_g;
 	    	}
 
 	    	if (n_iter > 1) 
@@ -641,17 +641,19 @@ int main (int argc, char** argv) {
 
 	       	compute_p(gp, p, p_prev, g, tau);
 	       	double norm_p_prev = compute_norm(gp, p, p_prev);
-	       	double norm_p_phi = compute_norm(gp, p, phi_on_grid);
-	       	/*if (rank == 0)
+	       	/* double norm_p_phi = compute_norm(gp, p, phi_on_grid);
+	       	if (rank == 0)
 	       		printf("# iteration %d: norm_p_prev=%f norm_p_phi=%f\n",      \
-                    n_iter, norm_p_prev, norm_p_phi);*/
-	       	if (norm_p_prev < gp.eps)
+                    n_iter, norm_p_prev, norm_p_phi); */ 
+	       	if (norm_p_prev < gp.eps) {
+                final_inaccuracy = compute_norm(gp, p, phi_on_grid);
             	break;
+            }
 
             swap(p, p_prev);
 	    	n_iter += 1;
 	    }
-	    write_two_func_to_file(gp, p, "p", phi_on_grid, "phi_on_grid");
+	    //write_two_func_to_file(gp, p, "p", phi_on_grid, "phi_on_grid");
     	//write_func_to_file(gp, p, "p");
     	//write_func_to_file(gp, phi_on_grid, "phi_on_grid");
 	}
@@ -660,6 +662,7 @@ int main (int argc, char** argv) {
 	if (rank == 0) {
 		clock_t end_time = clock();
 	  	double elapsed_secs = double(end_time - start_time) / CLOCKS_PER_SEC;
+	  	printf("Inaccuracy %f\n", final_inaccuracy);
 	  	printf("Algorithm finished! Elapsed time: %f sec\n", elapsed_secs);
 	}
 	return 0;

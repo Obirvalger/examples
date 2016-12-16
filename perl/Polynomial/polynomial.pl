@@ -42,14 +42,15 @@ my $t = Polynomial->new(k => $k,
 
 my $f = Polynomial->new(k => $k, str => "$e*x^$k_1 + (x+1)^$k_1");
 my $g = Polynomial->new(k => $k, str => "x^$k_1 + $e*(x+1)^$k_1");
-warn $f->init_str;
-warn $g->init_str;
-warn Polynomial->new(k => $k, str => "(x+1)^$k_1");
+say Polynomial->new(k =>  $k, str => "$e*x^$k_1 + (x-1)^$k_1");
+#warn $f->init_str;
+#warn $g->init_str;
+#warn Polynomial->new(k => $k, str => "(x+1)^$k_1");
 
-for my $d (0..$k-1) {
-    say $f->polarize($d)->to_csv;
-}
-say '';
-for my $d (0..$k-1) {
-    say $g->polarize($d)->to_csv;
-}
+#for my $d (0..$k-1) {
+    #say $f->polarize($d)->to_csv;
+#}
+#say '';
+#for my $d (0..$k-1) {
+    #say $g->polarize($d)->to_csv;
+#}
