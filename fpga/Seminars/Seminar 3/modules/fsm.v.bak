@@ -1,0 +1,104 @@
+module fsm
+	(output reg i_clear, i_load, y_clear, y_load, x_clear, x_load,
+	 input 		LT, LEQ, clock, reset
+	 );
+	 
+	 reg [2:0]	c_state, n_state;
+		
+always @ (c_state, LT, LEQ)
+begin
+	case (c_state)
+		3'b000:
+			begin //State A
+				i_clear = 0;
+				i_load = 1;
+				y_load = 0;
+				y_clear = 1;
+				x_load = 1;
+				x_clear = 0;
+				n_state = 3'b001;
+			end
+		3'b001: //State B
+			begin
+				i_clear = 1;
+				i_load = 0;
+				y_load = 1;
+				y_clear = 1;
+				x_load = 0;
+				x_clear = 1;
+				n_state = 3'b010;
+			end
+		3'b010:
+			begin //State C
+				i_clear = 1;
+				i_load = 1;
+				y_load = 1;
+				y_clear = 1;
+				x_load = 1;
+				x_clear = 1;
+				if (LEQ) n_state = 3'b001;
+				if (~LEQ & LT) n_state = 3'b011;
+				if (~LEQ & ~LT) n_state = 3'b100;
+			end
+		3'b011:
+			begin //State D
+				y_load = 1;
+				y_clear = 0;
+				x_load = 1;
+				x_clear = 1;
+				i_load = 1;
+				i_clear = 1;
+				n_state = 3'b101;
+			end
+		3'b100:
+			begin //State E
+				y_load = 1;
+				y_clear = 0;
+				x_load = 1;
+				x_clear = 1;
+				i_load = 1;
+				i_clear = 1;
+				n_state = 3'b101;
+			end
+		3'b101:
+			begin //State E	
+				y_load = 1;
+				y_clear = 1;
+				x_load = 1;
+				x_clear = 1;
+				i_load = 1;
+				i_clear = 1;
+				n_state = 3'b000;
+			end
+		3'b110:
+			begin //State E
+				y_load = 1;
+				y_clear = 1;
+				x_load = 1;
+				x_clear = 1;
+				i_load = 1;
+				i_clear = 1;
+				n_state = 3'b000;
+			end
+		3'b111:
+			begin //State E
+				y_load = 1;
+				y_clear = 1;
+				x_load = 1;
+				x_clear = 1;
+				i_load = 1;
+				i_clear = 1;
+				n_state = 3'b000;
+			end
+	endcase
+end
+
+always @ (posedge clock, negedge reset)
+begin
+	if (~reset)
+		c_state <= 0;
+	else
+		c_state <= n_state;
+end
+endmodule
+		
