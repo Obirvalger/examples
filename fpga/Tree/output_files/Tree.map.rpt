@@ -1,5 +1,5 @@
 Analysis & Synthesis report for Tree
-Fri Dec 16 13:38:01 2016
+Sun Dec 18 19:07:25 2016
 Quartus Prime Version 16.1.0 Build 196 10/24/2016 SJ Lite Edition
 
 
@@ -11,6 +11,7 @@ Quartus Prime Version 16.1.0 Build 196 10/24/2016 SJ Lite Edition
   3. Analysis & Synthesis Settings
   4. Parallel Compilation
   5. Analysis & Synthesis Messages
+  6. Analysis & Synthesis Suppressed Messages
 
 
 
@@ -37,7 +38,7 @@ agreement for further details.
 +----------------------------------------------------------------------------------+
 ; Analysis & Synthesis Summary                                                     ;
 +------------------------------------+---------------------------------------------+
-; Analysis & Synthesis Status        ; Failed - Fri Dec 16 13:38:01 2016           ;
+; Analysis & Synthesis Status        ; Failed - Sun Dec 18 19:07:25 2016           ;
 ; Quartus Prime Version              ; 16.1.0 Build 196 10/24/2016 SJ Lite Edition ;
 ; Revision Name                      ; Tree                                        ;
 ; Top-level Entity Name              ; Tree                                        ;
@@ -165,21 +166,24 @@ agreement for further details.
 Info: *******************************************************************
 Info: Running Quartus Prime Analysis & Synthesis
     Info: Version 16.1.0 Build 196 10/24/2016 SJ Lite Edition
-    Info: Processing started: Fri Dec 16 13:37:32 2016
+    Info: Processing started: Sun Dec 18 19:06:56 2016
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off Tree -c Tree
 Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
 Info (20030): Parallel compilation is enabled and will use 2 of the 2 processors detected
-Info (12021): Found 1 design units, including 1 entities, in source file Tree.v
-    Info (12023): Found entity 1: Tree File: /home/obirvalger/prog/examples/fpga/Tree/Tree.v Line: 2
-Info (12127): Elaborating entity "Tree" for the top level hierarchy
-Info (10648): Verilog HDL Display System Task info at Tree.v(26): Hello, World           4 File: /home/obirvalger/prog/examples/fpga/Tree/Tree.v Line: 26
-Warning (10175): Verilog HDL warning at Tree.v(27): ignoring unsupported system task File: /home/obirvalger/prog/examples/fpga/Tree/Tree.v Line: 27
-Warning (12158): Entity "Tree" contains only dangling pins
-Error (12061): Can't synthesize current design -- Top partition does not contain any logic
-Error: Quartus Prime Analysis & Synthesis was unsuccessful. 1 error, 3 warnings
-    Error: Peak virtual memory: 1055 megabytes
-    Error: Processing ended: Fri Dec 16 13:38:01 2016
+Error (10170): Verilog HDL syntax error at Tree.v(139) near text: "+";  expecting an identifier. Check for and fix any syntax errors that appear immediately before or at the specified keyword. The Intel FPGA Knowledge Database contains many articles with specific details on how to resolve this error. Visit the Knowledge Database at https://www.altera.com/support/support-resources/knowledge-base/search.html and search for this specific error message number. File: /home/ogneslav/prog/examples/fpga/Tree/Tree.v Line: 139
+Error (10112): Ignored design unit "Tree" at Tree.v(5) due to previous errors File: /home/ogneslav/prog/examples/fpga/Tree/Tree.v Line: 5
+Info (12021): Found 0 design units, including 0 entities, in source file Tree.v
+Info (144001): Generated suppressed messages file /home/ogneslav/prog/examples/fpga/Tree/output_files/Tree.map.smsg
+Error: Quartus Prime Analysis & Synthesis was unsuccessful. 2 errors, 1 warning
+    Error: Peak virtual memory: 952 megabytes
+    Error: Processing ended: Sun Dec 18 19:07:25 2016
     Error: Elapsed time: 00:00:29
-    Error: Total CPU time (on all processors): 00:01:12
+    Error: Total CPU time (on all processors): 00:01:11
+
+
++------------------------------------------+
+; Analysis & Synthesis Suppressed Messages ;
++------------------------------------------+
+The suppressed messages can be found in /home/ogneslav/prog/examples/fpga/Tree/output_files/Tree.map.smsg.
 
 

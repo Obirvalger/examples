@@ -26,6 +26,11 @@ reg[2:0] right_ind[6:0]; //
 
 reg[2:0] i;
 
+initial
+begin
+    tree_counter = 0;
+end
+
 always @(tree_counter)
 begin
    buf_empty = (tree_counter == 0);
@@ -33,6 +38,7 @@ begin
 
 end
 
+/*
 always @(posedge clk or posedge rst)
 begin
    if( rst )
@@ -50,14 +56,16 @@ begin
    else
       tree_counter <= tree_counter;
 end
+*/
 
+// Find
 always @( posedge clk or posedge rst)
 begin
    if( rst )
       led <= 0;
    else
    begin
-      if( rd_en && !buf_empty )
+      if( k0 && !buf_empty )
           begin
               i = 0;
               exit_flg = 0;
@@ -86,13 +94,23 @@ begin
    end
 end
 
-//always @(posedge clk or rst)
-//begin
-    //if (k0)
-    //begin
-        //if (exit_flg) 
-    //end
-//end
+// Insert
+always @(posedge clk or rst)
+begin
+    if (k1 && tree_counter < 7)
+    begin
+        //$display("tree_counter %d", tree_counter);
+        if (1 /* exit_flg */)
+        begin
+            $display("sw %d", sw);
+            buf_mem[tree_counter] = sw;
+            //$display("sw %d", buf_mem[tree_counter]);
+            tree_counter = tree_counter + 1;
+            //$display("tree_counter %d", tree_counter);
+            //exit_flg = 0;
+        end
+    end
+end
 
 always @(posedge clk)
 begin
@@ -131,12 +149,13 @@ begin
         led[3:0] = 0;
 end 
 
+/*
 always@(posedge clk or posedge k1)
 begin
     if (sw[0])
     begin
         tree_counter = 0;
-        for (i = 0; i < 7; ++i)
+        for(i = 0; i < 7; i = i + 1)
         begin
             buf_mem[i] = 0;
             left_ind[i] = 7;
@@ -144,4 +163,5 @@ begin
         end
     end
 end
+*/
 endmodule

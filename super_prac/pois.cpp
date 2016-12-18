@@ -8,7 +8,7 @@ using std::swap;
 using std::max;
 #include <stdexcept>
 using std::runtime_error;
-#include <math.h> 
+//#include <math.h> 
 #include <cmath>
 using std::abs;
 #include <mpi.h>
@@ -18,12 +18,12 @@ using std::stringstream;
 #include <fstream>
 #include <cstdlib>
 #include <ctime>
-#include <stdlib.h>
+//#include <stdlib.h>
 #ifdef _OPENMP
 #include <omp.h>
 #endif
 
-//using namespace std;
+// using namespace std;
 
 string int_to_str(int number) {
 	stringstream ss;

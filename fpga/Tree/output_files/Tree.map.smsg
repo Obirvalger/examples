@@ -1,0 +1,1 @@
+Warning (10268): Verilog HDL information at Tree.v(54): always construct contains both blocking and non-blocking assignments File: /home/ogneslav/prog/examples/fpga/Tree/Tree.v Line: 54
