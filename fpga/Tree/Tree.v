@@ -29,6 +29,12 @@ reg[2:0] i;
 initial
 begin
     tree_counter = 0;
+    for(i = 0; i < 7; i = i + 1)
+    begin
+        buf_mem[i] = 0;
+        left_ind[i] = 7;
+        right_ind[i] = 7;
+    end
 end
 
 always @(tree_counter)
@@ -44,13 +50,13 @@ begin
    if( rst )
        tree_counter <= 0;
 
-   else if( (!buf_full && wr_en) && ( !buf_empty && rd_en ) )
+   else if( (~buf_full && wr_en) && ( ~buf_empty && rd_en ) )
        tree_counter <= tree_counter;
 
-   else if( !buf_full && wr_en )
+   else if( ~buf_full && wr_en )
        tree_counter <= tree_counter + 1;
 
-   else if( !buf_empty && rd_en )
+   else if( ~buf_empty && rd_en )
        tree_counter <= tree_counter - 1;
 
    else
@@ -59,19 +65,21 @@ end
 */
 
 // Find
-always @( posedge clk or posedge rst)
+always @( posedge clk )//or posedge rst)
 begin
    if( rst )
       led <= 0;
    else
    begin
-      if( k0 && !buf_empty )
+      if( k0 && ~buf_empty )
           begin
               i = 0;
               exit_flg = 0;
               found = 0;
-              while (!found || !exit_flg)
+              while (~found || ~exit_flg)
               begin
+                  $display("Current %d", buf_mem[i]);
+                  $display("i %d", i);
                   if (sw < buf_mem[i]) 
                       if (left_ind[i] < 7)
                           i = left_ind[i];
@@ -115,7 +123,7 @@ end
 always @(posedge clk)
 begin
 
-   if( wr_en && !buf_full )
+   if( wr_en && ~buf_full )
       buf_mem[ wr_ptr ] <= sw;
 
    else
@@ -131,10 +139,10 @@ begin
    end
    else
    begin
-      if( !buf_full && wr_en )    wr_ptr <= wr_ptr + 1;
+      if( ~buf_full && wr_en )    wr_ptr <= wr_ptr + 1;
           else  wr_ptr <= wr_ptr;
 
-      if( !buf_empty && rd_en )   rd_ptr <= rd_ptr + 1;
+      if( ~buf_empty && rd_en )   rd_ptr <= rd_ptr + 1;
       else rd_ptr <= rd_ptr;
    end
 

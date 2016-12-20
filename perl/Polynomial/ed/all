@@ -1,4 +1,4 @@
-#! /usr/bin/sh
+#! /bin/sh
 
 VIM=''
 if [ -f /usr/bin/vimx ]

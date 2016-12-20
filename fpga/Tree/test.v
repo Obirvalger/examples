@@ -1,4 +1,4 @@
-`timescale 1 s / 100 ms
+`timescale 100 s / 10 s
 
 module Tree_test();
 reg clk, rst, wr_en, rd_en ;
@@ -15,7 +15,8 @@ Tree ff( .clk(clk), .k0(k[0]), .k1(k[1]), .rst(rst), .sw(sw), .led(led),
 initial
 begin
     clk = 0;
-    rst = 1;
+    rst = 0;
+
     rd_en = 0;
     wr_en = 0;
 
@@ -76,7 +77,7 @@ begin
 end
 
 always
-   #5 clk = ~clk;
+   #10000 clk = ~clk;
 
 task insert;
 input[3:0] data;
@@ -84,15 +85,17 @@ input[3:0] data;
             $display("---Cannot insert: Buffer Full---");
         else
         begin
-           $display("Inserted ",data );
-           sw = data;
-           k[1] = 1;
-           //k[1] = 1;
-                @(posedge clk);
-                begin
-                    #1 k[1] = 0;
-                    //#1 k[1] = 1;
-                end
+            $display("Inserted ",data );
+            sw = data;
+            k[1] = 1;
+            //$display("k1 ", k[1] );
+            //k[1] = 1;
+            @(posedge clk);
+            begin
+                #1 k[1] = 0;
+                //#1 k[1] = 1;
+            end
+            //$display("k1 ", k[1] );
         end
 
 endtask
@@ -109,8 +112,11 @@ task find;
             sw = in_data;
             k[0] = 1;
              
+            $display("k0 ", k[0] );
             @(posedge clk);
             #1 k[0] = 0;
+
+            $display("k0 ", k[0] );
 
             out_data = led;
             $display("-------------------------------Found ", out_data);
