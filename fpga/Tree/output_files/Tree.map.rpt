@@ -1,5 +1,5 @@
 Analysis & Synthesis report for Tree
-Mon Dec 19 01:40:32 2016
+Fri Dec 23 14:41:38 2016
 Quartus Prime Version 16.1.0 Build 196 10/24/2016 SJ Lite Edition
 
 
@@ -37,7 +37,7 @@ agreement for further details.
 +----------------------------------------------------------------------------------+
 ; Analysis & Synthesis Summary                                                     ;
 +------------------------------------+---------------------------------------------+
-; Analysis & Synthesis Status        ; Failed - Mon Dec 19 01:40:32 2016           ;
+; Analysis & Synthesis Status        ; Failed - Fri Dec 23 14:41:38 2016           ;
 ; Quartus Prime Version              ; 16.1.0 Build 196 10/24/2016 SJ Lite Edition ;
 ; Revision Name                      ; Tree                                        ;
 ; Top-level Entity Name              ; Tree                                        ;
@@ -148,8 +148,8 @@ agreement for further details.
 +----------------------------+-------------+
 ; Processors                 ; Number      ;
 +----------------------------+-------------+
-; Number detected on machine ; 8           ;
-; Maximum allowed            ; 4           ;
+; Number detected on machine ; 4           ;
+; Maximum allowed            ; 2           ;
 ;                            ;             ;
 ; Average used               ; 1.00        ;
 ; Maximum used               ; 1           ;
@@ -165,23 +165,25 @@ agreement for further details.
 Info: *******************************************************************
 Info: Running Quartus Prime Analysis & Synthesis
     Info: Version 16.1.0 Build 196 10/24/2016 SJ Lite Edition
-    Info: Processing started: Mon Dec 19 01:40:16 2016
+    Info: Processing started: Fri Dec 23 14:40:52 2016
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off Tree -c Tree
 Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
-Info (20030): Parallel compilation is enabled and will use 4 of the 4 processors detected
+Info (20030): Parallel compilation is enabled and will use 2 of the 2 processors detected
+Info (12021): Found 1 design units, including 1 entities, in source file test.v
+    Info (12023): Found entity 1: Tree_test File: /home/ogneslav/prog/examples/fpga/Tree/test.v Line: 3
 Info (12021): Found 1 design units, including 1 entities, in source file Tree.v
-    Info (12023): Found entity 1: Tree File: /home/ogneslav/prog/examples/fpga/Tree/Tree.v Line: 5
-Warning (10037): Verilog HDL or VHDL warning at Tree.v(103): conditional expression evaluates to a constant File: /home/ogneslav/prog/examples/fpga/Tree/Tree.v Line: 103
+    Info (12023): Found entity 1: Tree File: /home/ogneslav/prog/examples/fpga/Tree/Tree.v Line: 1
+Warning (10236): Verilog HDL Implicit Net warning at test.v(12): created implicit net for "buf_empty" File: /home/ogneslav/prog/examples/fpga/Tree/test.v Line: 12
+Warning (10236): Verilog HDL Implicit Net warning at test.v(12): created implicit net for "buf_full" File: /home/ogneslav/prog/examples/fpga/Tree/test.v Line: 12
 Info (12127): Elaborating entity "Tree" for the top level hierarchy
-Warning (10858): Verilog HDL warning at Tree.v(24): object left_ind used but never assigned File: /home/ogneslav/prog/examples/fpga/Tree/Tree.v Line: 24
-Warning (10858): Verilog HDL warning at Tree.v(25): object right_ind used but never assigned File: /home/ogneslav/prog/examples/fpga/Tree/Tree.v Line: 25
-Error (10119): Verilog HDL Loop Statement error at Tree.v(73): loop with non-constant loop condition must terminate within 250 iterations File: /home/ogneslav/prog/examples/fpga/Tree/Tree.v Line: 73
-Warning (10240): Verilog HDL Always Construct warning at Tree.v(62): inferring latch(es) for variable "led", which holds its previous value in one or more paths through the always construct File: /home/ogneslav/prog/examples/fpga/Tree/Tree.v Line: 62
+Warning (10036): Verilog HDL or VHDL warning at Tree.v(18): object "curr" assigned a value but never read File: /home/ogneslav/prog/examples/fpga/Tree/Tree.v Line: 18
+Warning (10230): Verilog HDL assignment warning at Tree.v(23): truncated value with size 32 to match size of target (3) File: /home/ogneslav/prog/examples/fpga/Tree/Tree.v Line: 23
+Error (10119): Verilog HDL Loop Statement error at Tree.v(46): loop with non-constant loop condition must terminate within 250 iterations File: /home/ogneslav/prog/examples/fpga/Tree/Tree.v Line: 46
 Error (12153): Can't elaborate top-level user hierarchy
 Error: Quartus Prime Analysis & Synthesis was unsuccessful. 2 errors, 5 warnings
-    Error: Peak virtual memory: 962 megabytes
-    Error: Processing ended: Mon Dec 19 01:40:32 2016
-    Error: Elapsed time: 00:00:16
-    Error: Total CPU time (on all processors): 00:00:35
+    Error: Peak virtual memory: 963 megabytes
+    Error: Processing ended: Fri Dec 23 14:41:38 2016
+    Error: Elapsed time: 00:00:46
+    Error: Total CPU time (on all processors): 00:01:32
 
 

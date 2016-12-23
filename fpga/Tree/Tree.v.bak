@@ -25,6 +25,18 @@ reg[2:0] left_ind[6:0]; //
 reg[2:0] right_ind[6:0]; //  
 
 reg[2:0] i;
+reg[2:0] curr;
+
+initial
+begin
+    tree_counter = 0;
+    for(i = 0; i < 7; i = i + 1)
+    begin
+        buf_mem[i] = 0;
+        left_ind[i] = 7;
+        right_ind[i] = 7;
+    end
+end
 
 always @(tree_counter)
 begin
@@ -33,37 +45,45 @@ begin
 
 end
 
+/*
 always @(posedge clk or posedge rst)
 begin
    if( rst )
        tree_counter <= 0;
 
-   else if( (!buf_full && wr_en) && ( !buf_empty && rd_en ) )
+   else if( (~buf_full && wr_en) && ( ~buf_empty && rd_en ) )
        tree_counter <= tree_counter;
 
-   else if( !buf_full && wr_en )
+   else if( ~buf_full && wr_en )
        tree_counter <= tree_counter + 1;
 
-   else if( !buf_empty && rd_en )
+   else if( ~buf_empty && rd_en )
        tree_counter <= tree_counter - 1;
 
    else
       tree_counter <= tree_counter;
 end
+*/
 
-always @( posedge clk or posedge rst)
+// Find
+always @( posedge clk )//or posedge rst)
 begin
-   if( rst )
-      led <= 0;
-   else
-   begin
-      if( rd_en && !buf_empty )
+      if( k0 && ~buf_empty )
           begin
+              //$display("lol ");
               i = 0;
               exit_flg = 0;
               found = 0;
-              while (!found || !exit_flg)
+              while (~found && ~exit_flg)
               begin
+                  //$display("Current %d", buf_mem[i]);
+                  //$display("i %d", i);
+                  //if (i == 7)
+                  //begin
+                      //exit_flg = 1;
+                      //break;
+                  //end
+                  //$display("right %d", right_ind[i]);
                   if (sw < buf_mem[i]) 
                       if (left_ind[i] < 7)
                           i = left_ind[i];
@@ -71,33 +91,75 @@ begin
                           exit_flg = 1;
 
                   else if (sw > buf_mem[i])
+                      if (right_ind[i] < 7)
                           i = right_ind[i];
+                      else
+                          exit_flg = 1;
 
                   else if (sw == buf_mem[i])
                       found = 1;
+                  //$display("Ef %d", exit_flg);
               end
-              led[7] = found; 
-              if (found)
-                  led[3:0] = sw;
+
+              //$display("Found %d", found);
+              //$display("Ef after %d", exit_flg);
+              //$display("Sw %d", sw);
+
+
           end  
       else
-         led <= led;
+      begin
+          led <= led;
+          exit_flg = 1;
+          found = 0;
+      end
 
-   end
+    led[3:0] <= sw;
+    led[7] <= found; 
 end
 
-//always @(posedge clk or rst)
-//begin
-    //if (k0)
-    //begin
-        //if (exit_flg) 
-    //end
-//end
+// Insert
+always @(posedge clk or rst)
+begin
+    if (k1 && ~buf_full)
+    begin
+        //$display("tree_counter %d", tree_counter);
+        if (~found)
+            if (~buf_empty)
+            begin
+                //$display("sw %d", sw);
+                //$display("I %d", i);
+                if (sw < buf_mem[i]) 
+                    left_ind[i] = tree_counter;
+                if (sw > buf_mem[i]) 
+                    right_ind[i] = tree_counter;
+
+              //$display("Right %d", right_ind[i]);
+                //exit_flg = 0;
+            end
+            else
+                curr = 0;
+
+            buf_mem[tree_counter] <= sw;
+            //$display("bm %d", buf_mem[tree_counter]);
+            tree_counter = tree_counter + 1;
+            //$display("tree_counter %d", tree_counter);
+         //else
+             
+
+    end
+end
+
+// Travel
+always @(posedge clk)
+begin
+
+end
 
 always @(posedge clk)
 begin
 
-   if( wr_en && !buf_full )
+   if( wr_en && ~buf_full )
       buf_mem[ wr_ptr ] <= sw;
 
    else
@@ -113,10 +175,10 @@ begin
    end
    else
    begin
-      if( !buf_full && wr_en )    wr_ptr <= wr_ptr + 1;
+      if( ~buf_full && wr_en )    wr_ptr <= wr_ptr + 1;
           else  wr_ptr <= wr_ptr;
 
-      if( !buf_empty && rd_en )   rd_ptr <= rd_ptr + 1;
+      if( ~buf_empty && rd_en )   rd_ptr <= rd_ptr + 1;
       else rd_ptr <= rd_ptr;
    end
 
@@ -131,12 +193,13 @@ begin
         led[3:0] = 0;
 end 
 
+
 always@(posedge clk or posedge k1)
 begin
-    if (sw[0])
+    if (~sw[0] && k1)
     begin
         tree_counter = 0;
-        for (i = 0; i < 7; ++i)
+        for(i = 0; i < 7; i = i + 1)
         begin
             buf_mem[i] = 0;
             left_ind[i] = 7;

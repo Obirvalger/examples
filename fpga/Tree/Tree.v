@@ -1,30 +1,21 @@
-//`define BUF_WIDTH 3    // BUF_SIZE = 16 -> BUF_WIDTH = 4, no. of bits to be used in pointer
-//`define BUF_SIZE ( 1<<`BUF_WIDTH )
-//`define ELEM_SIZE 4;
+module Tree( clk, k0, k1, sw, led, buf_empty, buf_full, tree_counter );
 
-module Tree( clk, k0, k1, rst, sw, led, wr_en, rd_en, buf_empty, buf_full, tree_counter );
-
-input                 rst, k0, k1, clk, wr_en, rd_en;   
-// reset, system clock, write enable and read enable.
+input                 k0, k1, clk;
 input [3:0]           sw;                   
-// data input to be pushed to buffer
 output[7:0]           led;                  
-// port to output the data using pop.
 output                buf_empty, buf_full;      
-// buffer empty and full indication 
-output[2:0] tree_counter;             
-// number of data pushed in to buffer   
+output[2:0]           tree_counter;             
 
 reg[7:0]              led;
 reg                   exit_flg, found;
 reg                   buf_empty, buf_full;
 reg[2:0] tree_counter;
-reg[2:0] rd_ptr, wr_ptr;           // pointer to read and write addresses  
-reg[3:0] buf_mem[6:0]; //  
-reg[2:0] left_ind[6:0]; //  
-reg[2:0] right_ind[6:0]; //  
+reg[3:0] buf_mem[6:0]; 
+reg[2:0] left_ind[6:0];
+reg[2:0] right_ind[6:0];
 
 reg[2:0] i;
+reg[2:0] curr;
 
 initial
 begin
@@ -44,42 +35,16 @@ begin
 
 end
 
-/*
-always @(posedge clk or posedge rst)
-begin
-   if( rst )
-       tree_counter <= 0;
-
-   else if( (~buf_full && wr_en) && ( ~buf_empty && rd_en ) )
-       tree_counter <= tree_counter;
-
-   else if( ~buf_full && wr_en )
-       tree_counter <= tree_counter + 1;
-
-   else if( ~buf_empty && rd_en )
-       tree_counter <= tree_counter - 1;
-
-   else
-      tree_counter <= tree_counter;
-end
-*/
-
 // Find
-always @( posedge clk )//or posedge rst)
+always @( posedge clk )
 begin
-   if( rst )
-      led <= 0;
-   else
-   begin
       if( k0 && ~buf_empty )
           begin
               i = 0;
               exit_flg = 0;
               found = 0;
-              while (~found || ~exit_flg)
+              while (~found && ~exit_flg)
               begin
-                  $display("Current %d", buf_mem[i]);
-                  $display("i %d", i);
                   if (sw < buf_mem[i]) 
                       if (left_ind[i] < 7)
                           i = left_ind[i];
@@ -87,67 +52,54 @@ begin
                           exit_flg = 1;
 
                   else if (sw > buf_mem[i])
+                      if (right_ind[i] < 7)
                           i = right_ind[i];
+                      else
+                          exit_flg = 1;
 
                   else if (sw == buf_mem[i])
                       found = 1;
               end
-              led[7] = found; 
-              if (found)
-                  led[3:0] = sw;
           end  
       else
-         led <= led;
+      begin
+          led <= led;
+          exit_flg = 1;
+          found = 0;
+      end
 
-   end
+    led[3:0] <= sw;
+    led[7] <= found; 
 end
 
 // Insert
-always @(posedge clk or rst)
+always @(posedge clk)
 begin
-    if (k1 && tree_counter < 7)
+    if (k1 && ~buf_full)
     begin
-        //$display("tree_counter %d", tree_counter);
-        if (1 /* exit_flg */)
-        begin
-            $display("sw %d", sw);
-            buf_mem[tree_counter] = sw;
-            //$display("sw %d", buf_mem[tree_counter]);
+        if (~found)
+            if (~buf_empty)
+            begin
+                if (sw < buf_mem[i]) 
+                    left_ind[i] = tree_counter;
+                if (sw > buf_mem[i]) 
+                    right_ind[i] = tree_counter;
+            end
+            else
+                curr = 0;
+
+            buf_mem[tree_counter] <= sw;
             tree_counter = tree_counter + 1;
-            //$display("tree_counter %d", tree_counter);
-            //exit_flg = 0;
-        end
     end
 end
 
+// Travel
 always @(posedge clk)
 begin
 
-   if( wr_en && ~buf_full )
-      buf_mem[ wr_ptr ] <= sw;
-
-   else
-      buf_mem[ wr_ptr ] <= buf_mem[ wr_ptr ];
 end
 
-always@(posedge clk or posedge rst)
-begin
-   if( rst )
-   begin
-      wr_ptr <= 0;
-      rd_ptr <= 0;
-   end
-   else
-   begin
-      if( ~buf_full && wr_en )    wr_ptr <= wr_ptr + 1;
-          else  wr_ptr <= wr_ptr;
-
-      if( ~buf_empty && rd_en )   rd_ptr <= rd_ptr + 1;
-      else rd_ptr <= rd_ptr;
-   end
-
-end
-
+// Output tree_counter
 always@(posedge clk)
 begin
     led[6:4] = tree_counter;
@@ -157,10 +109,10 @@ begin
         led[3:0] = 0;
 end 
 
-/*
+// Remove all
 always@(posedge clk or posedge k1)
 begin
-    if (sw[0])
+    if (~sw[0] && k1)
     begin
         tree_counter = 0;
         for(i = 0; i < 7; i = i + 1)
@@ -171,5 +123,4 @@ begin
         end
     end
 end
-*/
 endmodule

@@ -1,83 +1,82 @@
 `timescale 100 s / 10 s
 
 module Tree_test();
-reg clk, rst, wr_en, rd_en ;
+reg clk; 
 reg[3:0] sw;
 reg[7:0] tempdata;
 reg [1:0] k;
 wire [7:0] led;
 wire [2:0] tree_counter;
 
-Tree ff( .clk(clk), .k0(k[0]), .k1(k[1]), .rst(rst), .sw(sw), .led(led), 
-         .wr_en(wr_en), .rd_en(rd_en), .buf_empty(buf_empty), 
-         .buf_full(buf_full), .tree_counter(tree_counter) );
+Tree ff( .clk(clk), .k0(k[0]), .k1(k[1]), .sw(sw), .led(led), 
+     .buf_empty(buf_empty), .buf_full(buf_full), .tree_counter(tree_counter));
 
 initial
 begin
     clk = 0;
-    rst = 0;
-
-    rd_en = 0;
-    wr_en = 0;
 
     tempdata = 0;
 
+
+    find(5, tempdata);
+    insert(5);
+    find(11, tempdata);
+    insert(11);
+    find(9, tempdata);
+    insert(9);
+    find(3, tempdata);
+    insert(3);
+    find(1, tempdata);
     insert(1);
-    insert(10);
-    insert(8);
+    find(13, tempdata);
+    insert(13);
+    find(7, tempdata);
+    insert(7);
+    find(15, tempdata);
+    insert(15);
+
+    find(5, tempdata);
+    $display("Out %d", tempdata);
+
+    find(11, tempdata);
+    $display("Out %d", tempdata);
+
+    find(9, tempdata);
+    $display("Out %d", tempdata);
 
     find(3, tempdata);
     $display("Out %d", tempdata);
-    //sw = 0;
 
+    find(1, tempdata);
+    $display("Out %d", tempdata);
 
-    //#15 rst = 0;
+    rm();
 
-    //push(1);
-    //fork
-    //push(2);
-    //pop(tempdata);
-    //join              //push and pop together   
-    //push(10);
-    //push(20);
-    //push(30);
-    //push(40);
-    //push(50);
-    //push(60);
-    //push(70);
-    //push(80);
-    //push(90);
-    //push(100);
-    //push(110);
-    //push(120);
-    //push(130);
+    find(13, tempdata);
+    $display("Out %d", tempdata);
 
-    //pop(tempdata);
-    //push(tempdata);
-    //pop(tempdata);
-    //pop(tempdata);
-    //pop(tempdata);
-    //pop(tempdata);
-    //push(140);
-    //pop(tempdata);
-    //push(tempdata);//
-    //pop(tempdata);
-    //pop(tempdata);
-    //pop(tempdata);
-    //pop(tempdata);
-    //pop(tempdata);
-    //pop(tempdata);
-    //pop(tempdata);
-    //pop(tempdata);
-    //pop(tempdata);
-    //pop(tempdata);
-    //pop(tempdata);
-    //push(5);
-    //pop(tempdata);
+    find(7, tempdata);
+    $display("Out %d", tempdata);
+
+    find(15, tempdata);
+    $display("Out %d", tempdata);
 end
 
 always
-   #10000 clk = ~clk;
+   #100000000 clk = ~clk;
+
+task rm;
+        begin
+            $display("All removed");
+            sw = 0;
+            k[1] = 1;
+            @(posedge clk);
+            begin
+                #1 k[1] = 0;
+            end
+        end
+
+endtask
 
 task insert;
 input[3:0] data;
@@ -88,14 +87,10 @@ input[3:0] data;
             $display("Inserted ",data );
             sw = data;
             k[1] = 1;
-            //$display("k1 ", k[1] );
-            //k[1] = 1;
             @(posedge clk);
             begin
                 #1 k[1] = 0;
-                //#1 k[1] = 1;
             end
-            //$display("k1 ", k[1] );
         end
 
 endtask
@@ -112,69 +107,14 @@ task find;
             sw = in_data;
             k[0] = 1;
              
-            $display("k0 ", k[0] );
             @(posedge clk);
             #1 k[0] = 0;
 
-            $display("k0 ", k[0] );
 
-            out_data = led;
-            $display("-------------------------------Found ", out_data);
-
-        end
-endtask
-
-task remove;
-output [3:0] data;
-
-   if( buf_empty )
-            $display("---Cannot Pop: Buffer Empty---");
-   else
-        begin
-
-     rd_en = 1;
-          @(posedge clk);
-
-          #1 rd_en = 0;
-          data = led;
-           $display("-------------------------------Poped ", data);
+            out_data = led[3:0];
+            $display("-------------------------------Found %d, %d", out_data,
+                led[7]);
 
         end
 endtask
-
-//task push;
-//input[7:0] data;
-
-
-   //if( buf_full )
-            //$display("---Cannot push: Buffer Full---");
-        //else
-        //begin
-           //$display("Pushed ",data );
-           //sw = data;
-           //wr_en = 1;
-                //@(posedge clk);
-                //#1 wr_en = 0;
-        //end
-
-//endtask
-
-//task pop;
-//output [7:0] data;
-
-   //if( buf_empty )
-            //$display("---Cannot Pop: Buffer Empty---");
-   //else
-        //begin
-
-     //rd_en = 1;
-          //@(posedge clk);
-
-          //#1 rd_en = 0;
-          //data = led;
-           //$display("-------------------------------Poped ", data);
-
-        //end
-//endtask
-
 endmodule
