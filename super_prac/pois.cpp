@@ -218,7 +218,6 @@ void compute_delta(GridParameters gp, const double *func, double *delta_func, do
 	//printf("i=%d j=%d grid_i=%d grid_j=%d average_hx=%f average_hy=%f h_i_1=%f h_i=%f h_j_1=%f h_j=%f f_curr=%f f_top=%f f_bottom=%f f_left=%f f_right=%f delta_func[i][j] = %f\n", i, j, grid_i, grid_j, average_hx, average_hy, h_i_1, h_i, h_j_1, h_j, f_curr, f_top, f_bottom, f_left, f_right, delta_func[i*gp.get_num_y_points()+j]);
 }
 
-
 enum MPI_tags { SendToTop, SendToBottom, SendToLeft, SendToRight};
 
 void compute_approx_delta(GridParameters gp, double* delta_func, const double* func) {
@@ -515,7 +514,6 @@ void write_two_func_to_file(GridParameters gp, double *func1, string func1_name,
     	}
 	}
 }
-
 
 int main (int argc, char** argv) {
 	if (argc != 3)
