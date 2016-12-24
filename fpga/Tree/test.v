@@ -59,6 +59,9 @@ begin
     $display("Out %d", tempdata);
 
     find(15, tempdata);
+    insert(15);
+
+    find(15, tempdata);
     $display("Out %d", tempdata);
 end
 
