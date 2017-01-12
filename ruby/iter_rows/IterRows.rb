@@ -2,9 +2,18 @@ class IterRows
   attr_reader :size
   attr_reader :rows
 
-  def initialize(size)
-    @size = size
+  def initialize(args)
+    @size = args[:size] || default_size
+    post_initialize(args)
     @rows = make_rows(size)
+  end
+
+  def default_size
+    0
+  end
+
+  def post_initialize(args)
+    nil
   end
 
   def make_rows(n)
@@ -40,7 +49,7 @@ class IterRows
     r.map(&:to_s).join
   end
 
-  def init_row()
+  def init_row
     raise NotImplementedError
   end
 

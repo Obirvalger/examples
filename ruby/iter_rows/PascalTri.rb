@@ -1,7 +1,11 @@
 load 'IterRows.rb'
 
 class PascalTri < IterRows
-  def init_row()
+  def default_size
+    4
+  end
+
+  def init_row
     [0,1,0]
   end
 
@@ -14,9 +18,7 @@ class PascalTri < IterRows
   end
 
   def row_to_s(r)
-    r[1..-2].reduce('') do |s,x|
-      s + x.to_s + ' '
-    end.chop
+    r[1..-2].join(' ')
   end
 end
 
