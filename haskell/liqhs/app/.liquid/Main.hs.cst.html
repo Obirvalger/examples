@@ -1,0 +1,33 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<title>app/Main.hs</title>
+</head>
+<head>
+<link type='text/css' rel='stylesheet' href='liquid.css' />
+</head>
+
+<body>
+<hr>
+Put mouse over identifiers to see inferred types
+<pre><span class=hs-linenum> 1: </span><span class='hs-keyword'>module</span> <span class='hs-conid'>Main</span> <span class='hs-keyword'>where</span>
+<span class=hs-linenum> 2: </span>
+<span class=hs-linenum> 3: </span><span class='hs-keyword'>import</span> <span class='hs-conid'>Lib</span>
+<span class=hs-linenum> 4: </span>
+<span class=hs-linenum> 5: </span><span class='hs-keyword'>{-@</span> <span class='hs-keyword'>type</span> <span class='hs-conid'>Pos</span>  <span class='hs-keyglyph'>=</span> <span class='hs-layout'>{</span><span class='hs-varid'>x</span> <span class='hs-conop'>:</span> <span class='hs-conid'>Int</span> <span class='hs-keyglyph'>|</span> <span class='hs-varid'>x</span> <span class='hs-varop'>&gt;</span> <span class='hs-num'>0</span> <span class='hs-varop'>&amp;&amp;</span> <span class='hs-varid'>x</span> <span class='hs-varop'>&lt;</span> <span class='hs-num'>5</span><span class='hs-layout'>}</span> <span class='hs-keyword'>@-}</span>
+<span class=hs-linenum> 6: </span>
+<span class=hs-linenum> 7: </span><span class='hs-keyword'>{-@</span> <span class='hs-varid'>n</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Pos</span> <span class='hs-keyword'>@-}</span>
+<span class=hs-linenum> 8: </span><span class='hs-definition'>n</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Int</span>
+<span class=hs-linenum> 9: </span><a class=annot href="#"><span class=annottext>{x##0 : GHC.Types.Int | x##0 &gt; 0
+                        &amp;&amp; x##0 &lt; 5}</span><span class='hs-definition'>n</span></a> <span class='hs-keyglyph'>=</span> <span class='hs-num'>3</span>
+<span class=hs-linenum>10: </span>
+<span class=hs-linenum>11: </span><span class='hs-keyword'>{-@</span> <span class='hs-varid'>localPort</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>NotRootPort</span> <span class='hs-keyword'>@-}</span>
+<span class=hs-linenum>12: </span><span class='hs-definition'>localPort</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Int</span>
+<span class=hs-linenum>13: </span><a class=annot href="#"><span class=annottext>{p##0 : GHC.Types.Int | 1024 &lt;= p##0
+                        &amp;&amp; p##0 &lt;= 65535}</span><span class='hs-definition'>localPort</span></a> <span class='hs-keyglyph'>=</span> <span class='hs-num'>4330</span>
+<span class=hs-linenum>14: </span>
+<span class=hs-linenum>15: </span><span class='hs-definition'>main</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>IO</span> <span class='hs-conid'>()</span>
+<span class=hs-linenum>16: </span><a class=annot href="#"><span class=annottext>(GHC.Types.IO {lq_tmp$x##156 : ()^"lq_tmp$x##155" "lq_tmp$x##9" | $k_##154[VV##153:=lq_tmp$x##156][lq_tmp$x##152:=Main.main##ryp]})</span><span class='hs-definition'>main</span></a> <span class='hs-keyglyph'>=</span> <a class=annot href="#"><span class=annottext>lq_tmp$x##127:(GHC.Types.Int, GHC.Types.Int) -&gt; (GHC.Types.IO ())</span><span class='hs-varid'>print</span></a> <span class='hs-layout'>(</span><span class='hs-varid'>n</span><span class='hs-layout'>,</span> <span class='hs-varid'>localPort</span><span class='hs-layout'>)</span>
+</pre>
+</body>
+</html>

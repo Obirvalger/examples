@@ -29,14 +29,14 @@ $c //= znprimroot($k);
 $e //= -znprimroot($k) % $k;
 $str //= "-t*x^$k_1";
 
-#my $h = Polynomial->new(k => $k, 
+#my $h = Polynomial->new(k => $k,
 #    str => "h*x^$k_1 + $k_1*t*x^$k_1 + t*(x+$k_1)^$k_1");
-#my $t = Polynomial->new(k => $k, 
+#my $t = Polynomial->new(k => $k,
 #    str => "t*x^$k_1 + -$c*h*x^$k_1 + $c*h*(x+$k_1)^$k_1");
 
-my $h = Polynomial->new(k => $k, 
-    str =>"$e*x^$k_1 + (x+1)^$k_1"); 
-my $t = Polynomial->new(k => $k, 
+my $h = Polynomial->new(k => $k,
+    str =>"$e*x^$k_1 + (x+1)^$k_1");
+my $t = Polynomial->new(k => $k,
     str => "x^$k_1 + $e*(x+1)^$k_1");
 #say $str;
 

@@ -1,0 +1,4 @@
+9:1-9:2::Main.n :: "{v : GHC.Types.Int | v > 0\n                     && v < 5}"
+13:1-13:10::Main.localPort :: "{p : GHC.Types.Int | 1024 <= p\n                     && p <= 65535}"
+16:1-16:5:::Main.main :: "(GHC.Types.IO ())"
+16:8-16:13::_ :: "(GHC.Types.Int, GHC.Types.Int) -> (GHC.Types.IO ())"

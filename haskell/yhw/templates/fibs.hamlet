@@ -1,0 +1,6 @@
+<p :isRed:style="color:red">
+  Hi #{lol} !
+<ul>
+  $forall n <- numbers
+    <li> I count #{n}
+<a href=@{HomeR}> Go home! 

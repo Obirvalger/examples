@@ -1,0 +1,5 @@
+/*@textcolor: #ccc;*/
+/*body { color: #{textcolor} }*/
+/*a:link, a:visited { color: #{textcolor} }*/
+body { background-color: green; }
+p { text-indent: 2em; }
