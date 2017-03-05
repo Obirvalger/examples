@@ -61,7 +61,7 @@ Vector: do {
 };
 # NOTE Begin Symbolic
 Symbolic: do {
-    my $use_big_test = 0;
+    my $use_big_test = 1;
 
     #big k neg test
     for my $k (qw(17 23 41 67 97 163)) {
