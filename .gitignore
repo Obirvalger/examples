@@ -8,7 +8,7 @@
 *.geany
 
 # игнорировать временные файлы
-tmp*
+*tmp*
 *~
 
 # игнорировать latex файлы
@@ -18,6 +18,10 @@ tmp*
 *.nav
 *.snm
 *.dvi
+*.fdb_latexmk
+*.fls
+*.pyg
+*.synctex.gz
 
 # игнорировать промежуточные sage файлы
 *.sage.py
