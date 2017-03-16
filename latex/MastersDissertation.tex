@@ -1,14 +1,18 @@
 % \documentclass[a4paper, 14pt]{extarticle}
 \documentclass[bibliography=totoc, a4paper, 12pt]{extarticle}
+% \usepackage{fullpage}
+\usepackage[a4paper,top=2cm,bottom=2.77cm,left=3cm,right=1.5cm]{geometry}
+% \usepackage{showframe}
+% \usepackage[a4paper, top=2cm]{geometry}
 \usepackage{setspace}
-\usepackage{indentfirst}
+% \usepackage{indentfirst}
 % \setstretch{1.3}
 \usepackage[utf8]{inputenc}
 \usepackage[russian]{babel}
 \usepackage{cite}
 \usepackage{hyperref}
 \usepackage{graphicx}
-\usepackage{listings}
+% \usepackage{listings}
 \usepackage[nottoc,notlot,notlof]{tocbibind}
 \usepackage{icomma}
 \let\stdsection\section
@@ -31,9 +35,9 @@
 \newcommand{\rol} {\textrm{rol}}
 \newcommand{\ror} {\textrm{ror}}
 \newcommand{\pphi}[1] {P^{\delta}(\varphi_{#1})}
-\textwidth=17cm       % Эти строки нужны для того,
-\textheight=21cm      % чтобы равенства уместились
-\oddsidemargin=0cm    % на странице
+% \textwidth=17cm       % Эти строки нужны для того,
+% \textheight=21cm      % чтобы равенства уместились
+% \oddsidemargin=0cm    % на странице
 
 \sloppy
 % \fussy
@@ -41,8 +45,60 @@
 \xdef\LastDeclaredEncoding{T2A}
 
 \begin{document}
+
+\thispagestyle {empty}
+
+\begin {center}
+
+\includegraphics [width = 0.5 \textwidth] {msu.png} \\
+{\scshape Московский Государственный Университет} \\
+Факультет вычислительной математики и кибернетики \\
+Кафедра математической кибернетики \\
+
+\vspace {3cm}
+
+{\large \bfseries Гордеев Михаил Михайлович}
+
+\vspace {0.5cm}
+
+{\LARGE \bfseries
+О сложности систем функций некоторых многозначных логик в классе поляризованных
+полиномов \\}
+
+\vspace{3cm}
+
+{МАГИСТЕРСКАЯ ДИССЕРТАЦИЯ}
+
+\end {center}
+
+\vfill
+\vfill
+
+\begin {flushright}
+  \large
+  \textbf{Научный руководитель:} \\
+  д.ф-м.н., доцент \\
+  С.\,Н. Селезнева
+
+  % \vspace {5mm}
+\end {flushright}
+
+\vfill
+\vfill
+
+\begin {center}
+Москва, 2016
+\end {center}
+
+\vfill
+
+\enlargethispage {4 \baselineskip}
+
+\newpage
+
 \setcounter{page}{2}
 \setcounter{secnumdepth}{-1}
+\setstretch{1.5}
 
 \tableofcontents
 
@@ -212,8 +268,11 @@ $k$\nobreakdash-значной логики $f(x_1 , \dots , x_n)$ с перио
 функций $k$-значных логик в классе поляризованных полиномов была рассмотрена в
 работе\cite{ss04}. В данной работе были рассмотрены аналогичные функции.
 
+\subsubsection{Функции одной переменной} Рассмотрим следующие функции
+пятизначной логики: $f = (1,4,4,4,3)$, $g = (3,4,4,4,1)$ и их линейные
+комбинации. Выпишем для этих функций поляризованные полиномы по всем
+поляризациям от $0$ до $4$.
 
-\subsubsection{Функции одной переменной}
 $$\begin{array}{l}
 f = 4x^4 + 4x^3 + x^2 + 4x + 1\\
 g = 4x^4 + 2x^3 + 3x^2 + 2x + 3\\
@@ -445,25 +504,35 @@ $d$.
 
 \end{proof}
 
+\subsection{Описание программы}
+
+Библиотека для работы с полиномами написана на языке программирования perl.
+Основные возможности это:
+\begin{itemize}
+  \item Для полиномов — класс Polynomial
+  \begin{itemize}
+    \item Создание поляризованных полиномов над полем по простому модулю.
+    \item Изменение поляризации полинома.
+    \item Сложение полиномов и умножение на число.
+    \item Вывод полиномов в удобном виде (для вставки в tex или csv файл).
+  \end{itemize}
+  \item Для систем полиномов — класс AOP
+  \begin{itemize}
+    \item Создание систем поляризованных полиномов в поле по простому модулю.
+    \item Проверка системы на сложность.
+    \item Вывод систем полиномов в виде tex или csv файла.
+  \end{itemize}
+\end{itemize}
+
 \section{Заключение}
 В работе получены следующие результаты:
 \begin{enumerate}
-\item Доказана теорема о нижней оценки длины функций, задаваемых сложными периодами.
+\item Найдены сложные системы для пятизначной и семизначной логик.
 
-\item Получено достаточное условие сложности периодов.
+\item Доказано существование сложных систем в $k$-значных логиках для любого
+простого $k$.
 
-\item Были найдены все сложные периоды длины четыре в трехзначной логике и длины семь в пятизначной.
-
-\item Написаны программы для работы с периодами в которых реализованы функции:
-\begin{itemize}
-\item Проверка периода на сложность
-\item Построение периодов, порожденных данным
-\item Построение специальных матриц, описанных в основных определених,
-и функций для работы с ними.
-\item Вывод полиномов функций по векторам периодов,
-\item Построение ядер, описанных матриц,
-\item Проверка выдвинутой гипотезы.
-\end{itemize}
+\item Написана программа для работы с символьными полиномами.
 \end{enumerate}
 
 
@@ -472,15 +541,13 @@ $d$.
 В приложении приводится код программ, использованных для получения некоторых
 результатов. Также программы сами по себе представляют интерес, так как могут
 быть использованы для более широкого ряда задач, чем требовалось при
-выполнении курсовой работы.
+выполнении этой работы.
 
 \paragraph{Программа поиска сложных систем.}
 
-\lstset{language=Perl}
+% \lstset{language=Perl}
 % \begin{footnotesize}
 \begin{verbatim}
-#! /usr/bin/perl
-
 use strict;
 use warnings;
 use Carp;
@@ -541,7 +608,6 @@ for my $f (keys %functions) {
             }
 
             say $out "$f,$g" if $complex;
-            #say "$f; $g" unless $complex;
         }
     }
 }
@@ -552,11 +618,9 @@ for my $f (keys %functions) {
 \paragraph{Программа, которая проверяет сложность систем и выводит их в удобном
 виде.}
 
-\lstset{language=Perl}
+% \lstset{language=Perl}
 % \begin{footnotesize}
 \begin{verbatim}
-#! /usr/bin/perl -Ilib
-
 use strict;
 use warnings;
 use feature qw(say);
