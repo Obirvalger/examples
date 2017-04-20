@@ -1,4 +1,5 @@
-import Data.Foldable
+{-import Data.Foldable-}
+{-import Control.Applicative-}
 
 data Tree a = Nil | Branch (Tree a) a (Tree a)   deriving (Eq, Show)
 
@@ -16,9 +17,45 @@ tree1 = Branch (Branch (Branch Nil 1 Nil) 3 (Branch Nil 2 Nil)) 4 (Branch Nil 5 
 --  / \   \
 -- 1   2   6
 
+testTree = Branch (Branch (Branch Nil 1 Nil) 2 (Branch Nil 3 Nil)) 4 (Branch Nil 5 Nil)
+--     4
+--    / \
+--   2   5
+--  / \
+-- 1   3
+
 newtype Preorder a   = PreO   (Tree a)    deriving (Eq, Show)
 newtype Postorder a  = PostO  (Tree a)    deriving (Eq, Show)
 newtype Levelorder a = LevelO (Tree a)    deriving (Eq, Show)
+
+instance Functor Tree where
+  fmap f Nil            = Nil
+  fmap f (Branch l x r) = Branch (fmap f l) (f x) (fmap f r)
+
+{-instance Applicative Tree where-}
+  {-pure a = Branch (pure a) a (pure a)-}
+
+  {-(Branch lf f rf) <*> (Branch lx x rx) = Branch (lf <*> lx) (f x) (rf <*> rx)-}
+  {-_ <*> _                               = Nil-}
+
+{-instance Traversable Tree where-}
+  {-traverse f Nil            = pure Nil-}
+  {-traverse f (Branch l x r) = Branch <$> (traverse f l) <*>  (f x) <*> (traverse f r)-}
+
+instance Traversable Tree where
+  traverse f Nil            = pure Nil
+  traverse f (Branch l x r) = flip . Branch <$> traverse f l <*> traverse f r <*> f x
+
+{-instance Traversable Tree where-}
+  {-sequenceA Nil            = pure Nil-}
+  {-sequenceA (Branch l x r) = (flip . Branch) <$> sequenceA l <*> sequenceA r <*> x-}
+
+{-instance Traversable Tree where-}
+  {-sequenceA Nil            = pure Nil-}
+  {-sequenceA (Branch l x r) = Branch <$> sequenceA l <*> x <*> sequenceA r-}
+
+{-asum :: (Foldable t, Alternative f) => t (f a) -> f a-}
+{-asum = foldr (<|>) empty-}
 
 instance Foldable Preorder where
   foldr f ini (PreO Nil)            = ini
@@ -33,7 +70,8 @@ instance Foldable Levelorder where
 
 instance Foldable Tree where
   foldr f ini Nil            = ini
-  foldr f ini (Branch l x r) = foldr f (f x (foldr f ini r)) l
+  foldr f ini (Branch l x r) = f x (foldr f (foldr f ini r) l)
+  {-foldr f ini (Branch l x r) = foldr f (f x (foldr f ini r)) l-}
 
 flat Nil acc = acc
 flat (Branch l x r) acc = flat l (x: acc) ++  flat r (x:acc)
