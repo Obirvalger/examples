@@ -1,3 +1,9 @@
+(define (fermat n)
+  (= (modulo-expt (+ 1 (random (- n 2))) (- n 1) n) 1))
+
+(define (prime? n tests)
+  (and-map (lambda (x) (ferma n)) (iota tests)))
+
 (define (pov a n)
     (let loop ((a a) (n n) (acc 1))
       (if (= n 0) acc
