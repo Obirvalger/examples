@@ -5,19 +5,17 @@ import "fmt"
 // fibonacci is a function that returns
 // a function that returns an int.
 func fibonacci() func() int {
-    n := 0
-    m := 1
-    return func() int {
-        k := n
-        n = m
-        m = n + k
-        return k
-    }
+	n, m := 0, 1
+	return func() int {
+		// k := n
+		n, m = m, n+m
+		return n
+	}
 }
 
 func main() {
 	f := fibonacci()
-	for i := 0; i < 10; i++ {
+	for i := 0; i < 5; i++ {
 		fmt.Println(f())
 	}
 }
